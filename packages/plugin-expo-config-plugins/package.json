@@ -1,0 +1,29 @@
+{
+  "name": "@rnef/plugin-expo-config-plugins",
+  "version": "0.2.0",
+  "type": "module",
+  "exports": {
+    "types": "./dist/src/index.d.ts",
+    "import": "./dist/src/index.js"
+  },
+  "files": [
+    "dist",
+    "src",
+    "template"
+  ],
+  "scripts": {
+    "publish:npm": "npm publish --access restricted",
+    "publish:verdaccio": "npm publish --registry http://localhost:4873 --userconfig ../../.npmrc"
+  },
+  "dependencies": {
+    "@rnef/tools": "^0.2.0",
+    "@expo/config-plugins": "^9.0.15",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@rnef/config": "^0.2.0"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}
