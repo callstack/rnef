@@ -18,7 +18,6 @@ export function makeFilePathModifier(
   actualProjectDir: string
 ): CustomModProvider {
   return function (original, file) {
-    console.log({ original, file });
     return BaseMods.provider({
       ...original,
       getFilePath: async ({ modRequest: { projectRoot } }) => {

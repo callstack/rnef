@@ -6,10 +6,7 @@ import { BaseMods, evalModsAsync } from '../ExpoConfigPlugins.js';
 import { getAndroidModFileProviders } from './withAndroidBaseMods.js';
 import { getIosModFileProviders } from './withIosBaseMods.js';
 
-export const withDefaultBaseMods: typeof expoWithDefaultBaseMods = (
-  config,
-  props
-) => {
+const withDefaultBaseMods: typeof expoWithDefaultBaseMods = (config, props) => {
   config = BaseMods.withIosBaseMods(config, {
     ...props,
     providers: getIosModFileProviders(),

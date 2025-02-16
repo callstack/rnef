@@ -21,7 +21,6 @@ export async function applyConfigPlugins({
   if (!Array.isArray(plugins) || plugins.length === 0) {
     return;
   }
-  console.log(withPlugins(withInternal(config, info), plugins));
   return compileModsAsync(
     withPlugins(withInternal(config, info), plugins),
     info
