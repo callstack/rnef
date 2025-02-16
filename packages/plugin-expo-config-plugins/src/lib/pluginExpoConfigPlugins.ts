@@ -22,9 +22,11 @@ export const pluginExpoConfigPlugins =
           return;
         }
 
+        const platforms = args.platforms || Object.keys(api.getPlatforms());
+
         applyConfigPlugins({
           projectRoot: api.getProjectRoot(),
-          platforms: args.platforms as ProjectInfo['platforms'],
+          platforms: platforms as ProjectInfo['platforms'],
           packageJsonPath,
           appJsonPath: path.join(api.getProjectRoot(), 'app.json'),
         });
