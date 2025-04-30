@@ -20,7 +20,8 @@ export function registerRunCommand(
         args as Flags,
         projectRoot,
         await api.getRemoteCacheProvider(),
-        api.getFingerprintOptions()
+        api.getFingerprintOptions(),
+        api.getBundlerStart()
       );
     },
     options: runOptions,

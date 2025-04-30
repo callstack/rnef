@@ -11,33 +11,50 @@ import { findDevServerPort, intro } from '@rnef/tools';
 import type { StartCommandArgs } from './runServer.js';
 import runServer from './runServer.js';
 
+export async function startDevServer({
+  root,
+  args,
+  reactNativeVersion,
+  reactNativePath,
+  platforms,
+}: {
+  root: string;
+  args: StartCommandArgs;
+  reactNativeVersion: string;
+  reactNativePath: string;
+  platforms: Record<string, object>;
+}) {
+  const { port, startDevServer } = await findDevServerPort(
+    args.port ?? 8081,
+    root
+  );
+
+  if (!startDevServer) {
+    return;
+  }
+
+  return runServer(
+    { root, reactNativeVersion, reactNativePath, platforms },
+    { ...args, port }
+  );
+}
+
 export const registerStartCommand = (api: PluginApi) => {
   api.registerCommand({
     name: 'start',
     action: async (args: StartCommandArgs) => {
       intro('Starting Metro dev server');
       const root = api.getProjectRoot();
-      const { port, startDevServer } = await findDevServerPort(
-        args.port ?? 8081,
-        root
-      );
-
-      if (!startDevServer) {
-        return;
-      }
-
       const reactNativeVersion = api.getReactNativeVersion();
       const reactNativePath = api.getReactNativePath();
       const platforms = api.getPlatforms();
-      return runServer(
-        {
-          root,
-          reactNativeVersion,
-          reactNativePath,
-          platforms,
-        },
-        { ...args, port }
-      );
+      await startDevServer({
+        root,
+        args,
+        reactNativeVersion,
+        reactNativePath,
+        platforms,
+      });
     },
     description: 'Start the Metro development server.',
     options: [
