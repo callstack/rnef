@@ -9,7 +9,7 @@ import {
   type SupportedRemoteCacheProviders,
 } from './common.js';
 import type { LocalBuild } from './localBuildCache.js';
-import { queryLocalBuildCache } from './localBuildCache.js';
+import { queryLocalRemoteBuildCache } from './localBuildCache.js';
 import { createRemoteBuildCache } from './remoteBuildCache.js';
 
 export type Distribution = 'simulator' | 'device';
@@ -47,7 +47,7 @@ Proceeding with local build.`);
 
   const root = getProjectRoot();
 
-  const localBuild = queryLocalBuildCache(artifactName);
+  const localBuild = queryLocalRemoteBuildCache(artifactName);
   if (localBuild != null) {
     loader.stop(`Found local cached build: ${color.cyan(localBuild.name)}`);
     return localBuild;

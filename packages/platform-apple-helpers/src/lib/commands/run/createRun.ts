@@ -8,6 +8,7 @@ import {
   isInteractive,
   logger,
   promptSelect,
+  queryLocalBuildCache,
   RnefError,
   spinner,
 } from '@rnef/tools';
@@ -55,13 +56,19 @@ export const createRun = async ({
       root: projectRoot,
       fingerprintOptions,
     });
-    const cachedBuild = await fetchCachedBuild({
-      artifactName,
-      remoteCacheProvider,
-    });
-    if (cachedBuild) {
+    const localBuild = queryLocalBuildCache(artifactName);
+    if (localBuild) {
       // @todo replace with a more generic way to pass binary path
-      args.binaryPath = cachedBuild.binaryPath;
+      args.binaryPath = localBuild.binaryPath;
+    } else {
+      const cachedBuild = await fetchCachedBuild({
+        artifactName,
+        remoteCacheProvider,
+      });
+      if (cachedBuild) {
+        // @todo replace with a more generic way to pass binary path
+        args.binaryPath = cachedBuild.binaryPath;
+      }
     }
   }
 

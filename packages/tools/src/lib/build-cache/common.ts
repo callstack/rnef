@@ -5,6 +5,7 @@ import { getCacheRootPath } from '../project.js';
 import type { spinner } from '../prompts.js';
 
 export const BUILD_CACHE_DIR = 'remote-build';
+export const LOCAL_BUILD_CACHE_DIR = 'local-build';
 
 export type SupportedRemoteCacheProviders = 'github-actions';
 
@@ -60,6 +61,10 @@ export async function formatArtifactName({
 
 export function getLocalArtifactPath(artifactName: string) {
   return path.join(getCacheRootPath(), BUILD_CACHE_DIR, artifactName);
+}
+
+export function getLocalBuildPath(artifactName: string) {
+  return path.join(getCacheRootPath(), LOCAL_BUILD_CACHE_DIR, artifactName);
 }
 
 export function getLocalBinaryPath(artifactPath: string) {

@@ -13,6 +13,7 @@ import {
   logger,
   outro,
   promptSelect,
+  queryLocalBuildCache,
   RnefError,
 } from '@rnef/tools';
 import type { BuildFlags } from '../buildAndroid/buildAndroid.js';
@@ -66,13 +67,19 @@ export async function runAndroid(
       root: projectRoot,
       fingerprintOptions,
     });
-    const cachedBuild = await fetchCachedBuild({
-      artifactName,
-      remoteCacheProvider,
-    });
-    if (cachedBuild) {
+    const localBuild = queryLocalBuildCache(artifactName);
+    if (localBuild) {
       // @todo replace with a more generic way to pass binary path
-      args.binaryPath = cachedBuild.binaryPath;
+      args.binaryPath = localBuild.binaryPath;
+    } else {
+      const cachedBuild = await fetchCachedBuild({
+        artifactName,
+        remoteCacheProvider,
+      });
+      if (cachedBuild) {
+        // @todo replace with a more generic way to pass binary path
+        args.binaryPath = cachedBuild.binaryPath;
+      }
     }
   }
 
