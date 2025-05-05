@@ -11,7 +11,12 @@ export function registerBuildCommand(
     name: 'build:android',
     description: 'Builds your app for Android platform.',
     action: async (args) => {
-      await buildAndroid(androidConfig, args as BuildFlags);
+      await buildAndroid(
+        androidConfig,
+        args as BuildFlags,
+        api.getProjectRoot(),
+        api.getFingerprintOptions()
+      );
     },
     options: options,
   });

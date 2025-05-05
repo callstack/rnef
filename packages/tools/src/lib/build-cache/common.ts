@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import type { FingerprintSources } from '../fingerprint/index.js';
 import { nativeFingerprint } from '../fingerprint/index.js';
 import { getCacheRootPath } from '../project.js';
 import type { spinner } from '../prompts.js';
@@ -50,11 +51,11 @@ export async function formatArtifactName({
   platform: 'ios' | 'android';
   traits: string[];
   root: string;
-  fingerprintOptions: { extraSources: string[]; ignorePaths: string[] };
+  fingerprintOptions: FingerprintSources;
 }): Promise<string> {
   const { hash } = await nativeFingerprint(root, {
-    platform,
     ...fingerprintOptions,
+    platform,
   });
   return `rnef-${platform}-${traits.join('-')}-${hash}`;
 }

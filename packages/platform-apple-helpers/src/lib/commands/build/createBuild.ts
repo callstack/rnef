@@ -1,6 +1,8 @@
 import path from 'node:path';
+import type { FingerprintSources } from '@rnef/tools';
 import {
   color,
+  formatArtifactName,
   isInteractive,
   logger,
   promptSelect,
@@ -27,17 +29,25 @@ export const createBuild = async ({
   args,
   projectRoot,
   reactNativePath,
+  fingerprintOptions,
 }: {
   platformName: BuilderCommand['platformName'];
   projectConfig: ProjectConfig;
   args: BuildFlags;
   projectRoot: string;
   reactNativePath: string;
+  fingerprintOptions: FingerprintSources;
 }) => {
   await validateArgs(args);
   let xcodeProject: XcodeProjectInfo;
   let sourceDir: string;
   try {
+    const artifactName = await formatArtifactName({
+      platform: 'ios',
+      traits: [args.destination ?? 'simulator', args.configuration ?? 'Debug'],
+      root: projectRoot,
+      fingerprintOptions,
+    });
     const { appPath, ...buildAppResult } = await buildApp({
       projectRoot,
       projectConfig,
@@ -48,6 +58,7 @@ export const createBuild = async ({
           : getDevicePlatformSDK(platformName),
       args,
       reactNativePath,
+      artifactName,
     });
     const loader = spinner();
     loader.start('');
