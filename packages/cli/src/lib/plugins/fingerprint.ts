@@ -1,5 +1,13 @@
 import { performance } from 'node:perf_hooks';
-import { intro, isInteractive, logger, nativeFingerprint, outro, spinner } from '@rnef/tools';
+import type { PluginApi } from '@rnef/config';
+import {
+  intro,
+  isInteractive,
+  logger,
+  nativeFingerprint,
+  outro,
+  spinner,
+} from '@rnef/tools';
 
 type NativeFingerprintCommandOptions = {
   platform: 'ios' | 'android';
@@ -50,3 +58,32 @@ export async function nativeFingerprintCommand(
 
   outro('Success 🎉.');
 }
+
+export const fingerprintPlugin = () => (api: PluginApi) => {
+  api.registerCommand({
+    name: 'fingerprint',
+    description: 'Calculate fingerprint for given platform',
+    action: async (path, options) => {
+      const fingerprintOptions = api.getFingerprintOptions();
+      await nativeFingerprintCommand(path, fingerprintOptions, options);
+    },
+    options: [
+      {
+        name: '-p, --platform <string>',
+        description: 'Select platform, e.g. ios or android',
+      },
+      {
+        name: '--raw',
+        description: 'Output the raw fingerprint hash for piping',
+      },
+    ],
+    args: [
+      { name: 'path', description: 'Directory to calculate fingerprint for' },
+    ],
+  });
+
+  return {
+    name: 'internal_fingerprint',
+    description: 'Fingerprint plugin',
+  };
+};

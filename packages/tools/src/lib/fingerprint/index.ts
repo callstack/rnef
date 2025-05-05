@@ -22,7 +22,7 @@ export type FingerprintResult = {
 };
 
 /**
- * Calculates the fingerprint of the native parts project o the project.
+ * Calculates the fingerprint of the native parts project of the project.
  */
 export async function nativeFingerprint(
   path: string,

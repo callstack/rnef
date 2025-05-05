@@ -45,11 +45,13 @@ Include "repo", "workflow", and "read:org" permissions.`
     return this.repoDetails;
   }
 
-  async query({
+  async list({
     artifactName,
+    limit,
   }: {
-    artifactName: string;
-  }): Promise<RemoteArtifact | null> {
+    artifactName?: string;
+    limit?: number;
+  }): Promise<RemoteArtifact[] | null> {
     const repoDetails = await this.detectRepoDetails();
     if (!getGitHubToken()) {
       logger.warn(`No GitHub Personal Access Token found.`);
@@ -62,16 +64,18 @@ Include "repo", "workflow", and "read:org" permissions.`
 
     const artifacts = await fetchGitHubArtifactsByName(
       artifactName,
-      repoDetails
+      repoDetails,
+      limit
     );
     if (artifacts.length === 0) {
       return null;
     }
 
-    return {
-      name: artifacts[0].name,
-      downloadUrl: artifacts[0].downloadUrl,
-    };
+    return artifacts.map((artifact) => ({
+      name: artifact.name,
+      url: artifact.downloadUrl,
+      id: String(artifact.id),
+    }));
   }
 
   async download({
@@ -79,20 +83,98 @@ Include "repo", "workflow", and "read:org" permissions.`
     loader,
   }: {
     artifact: RemoteArtifact;
-    loader: ReturnType<typeof spinner>;
+    loader?: ReturnType<typeof spinner>;
   }): Promise<LocalArtifact> {
     const artifactPath = getLocalArtifactPath(artifact.name);
-    await downloadGitHubArtifact(
-      artifact.downloadUrl,
-      artifactPath,
-      this.name,
-      loader
-    );
+    await downloadGitHubArtifact(artifact.url, artifactPath, this.name, loader);
     await extractArtifactTarballIfNeeded(artifactPath);
     return {
       name: artifact.name,
       path: artifactPath,
     };
+  }
+
+  async delete({
+    artifactName,
+    loader,
+  }: {
+    artifactName: string;
+    loader?: ReturnType<typeof spinner>;
+  }): Promise<boolean> {
+    const repoDetails = await this.detectRepoDetails();
+    if (!getGitHubToken()) {
+      logger.warn(`No GitHub Personal Access Token found.`);
+      return false;
+    }
+
+    if (!repoDetails) {
+      return false;
+    }
+
+    const artifacts = await fetchGitHubArtifactsByName(
+      artifactName,
+      repoDetails
+    );
+
+    if (artifacts.length === 0) {
+      loader?.stop(`No artifact found with name "${artifactName}" to delete.`);
+      return false;
+    }
+
+    loader?.start(
+      `Found ${artifacts.length} artifacts named "${artifactName}". Deleting...`
+    );
+
+    try {
+      const owner = repoDetails.owner;
+      const repo = repoDetails.repository;
+
+      // Delete all matching artifacts
+      let deletedCount = 0;
+      for (const artifact of artifacts) {
+        const artifactId = artifact.id;
+        const url = `https://api.github.com/repos/${owner}/${repo}/actions/artifacts/${artifactId}`;
+
+        const response = await fetch(url, {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${getGitHubToken()}`,
+            Accept: 'application/vnd.github+json',
+          },
+        });
+
+        if (!response.ok) {
+          logger.warn(
+            `Failed to delete artifact ID ${artifactId}: ${response.status} ${response.statusText}`
+          );
+          continue;
+        }
+
+        deletedCount++;
+      }
+
+      if (deletedCount < artifacts.length) {
+        loader?.stop(
+          `Partially succeeded: deleted ${deletedCount}/${artifacts.length} artifacts named "${artifactName}".`
+        );
+        return true;
+      } else {
+        loader?.stop(
+          `Successfully deleted all ${deletedCount} artifacts named "${artifactName}".`
+        );
+        return true;
+      }
+    } catch (error) {
+      loader?.stop(
+        `Failed to delete artifacts named "${artifactName}": ${error}`
+      );
+      return false;
+    }
+  }
+
+  async upload() {
+    logger.warn('Uploading artifacts to GitHub is not supported.');
+    return null;
   }
 }
 

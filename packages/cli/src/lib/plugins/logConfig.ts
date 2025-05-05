@@ -2,7 +2,7 @@ import type {
   Config,
   DependencyConfig,
 } from '@react-native-community/cli-types';
-import type { ConfigOutput } from '@rnef/config';
+import type { ConfigOutput, PluginApi } from '@rnef/config';
 
 function isValidRNDependency(config: DependencyConfig) {
   return (
@@ -28,7 +28,10 @@ function filterConfig(config: Config) {
 
 export const logConfig = async (
   args: { platform?: string },
-  ownConfig: ConfigOutput
+  ownConfig: {
+    platforms: ConfigOutput['platforms'];
+    root: ConfigOutput['root'];
+  }
 ) => {
   const { loadConfigAsync } = await import(
     '@react-native-community/cli-config'
@@ -49,3 +52,29 @@ export const logConfig = async (
 
   console.log(JSON.stringify(filterConfig(config), null, 2));
 };
+
+export const logConfigPlugin =
+  (ownConfig: {
+    platforms: ConfigOutput['platforms'];
+    root: ConfigOutput['root'];
+  }) =>
+  (api: PluginApi) => {
+    api.registerCommand({
+      name: 'config',
+      description: 'Output autolinking config',
+      action: async (args) => {
+        await logConfig(args, ownConfig);
+      },
+      options: [
+        {
+          name: '-p, --platform <string>',
+          description: 'Select platform, e.g. ios or android',
+        },
+      ],
+    });
+
+    return {
+      name: 'internal_config',
+      description: 'Configuration plugin',
+    };
+  };

@@ -10,7 +10,8 @@ export type SupportedRemoteCacheProviders = 'github-actions';
 
 export type RemoteArtifact = {
   name: string;
-  downloadUrl: string;
+  url: string;
+  id: string;
 };
 
 export type LocalArtifact = {
@@ -20,18 +21,36 @@ export type LocalArtifact = {
 
 export interface RemoteBuildCache {
   name: string;
-  query({
+  list({
     artifactName,
+    limit,
   }: {
-    artifactName: string;
-  }): Promise<RemoteArtifact | null>;
+    artifactName: string | undefined;
+    limit?: number;
+  }): Promise<RemoteArtifact[] | null>;
   download({
     artifact,
     loader,
   }: {
     artifact: RemoteArtifact;
-    loader: ReturnType<typeof spinner>;
+    loader?: ReturnType<typeof spinner>;
   }): Promise<LocalArtifact>;
+  delete({
+    artifactName,
+    loader,
+  }: {
+    artifactName: string;
+    loader?: ReturnType<typeof spinner>;
+  }): Promise<boolean>;
+  upload({
+    artifactPath,
+    artifactName,
+    loader,
+  }: {
+    artifactPath: string;
+    artifactName: string;
+    loader?: ReturnType<typeof spinner>;
+  }): Promise<RemoteArtifact | null>;
 }
 
 /**
@@ -68,10 +87,14 @@ export function getLocalBinaryPath(artifactPath: string) {
 
   // assume there is only one binary in the artifact
   for (const file of files) {
+    // skip hidden files such as .DS_Store
+    if (file.startsWith('.')) {
+      continue;
+    }
     if (file) {
       binaryPath = path.join(artifactPath, file);
+      break;
     }
-    break;
   }
 
   return binaryPath;

@@ -117,7 +117,15 @@ const importUp = async (
   return importUp(parentDir, name);
 };
 
-export async function getConfig(dir: string): Promise<ConfigOutput> {
+export async function getConfig(
+  dir: string,
+  internalPlugins: Array<
+    (ownConfig: {
+      platforms: ConfigOutput['platforms'];
+      root: ConfigOutput['root'];
+    }) => PluginType
+  >
+): Promise<ConfigOutput> {
   const { config, filePathWithExt, configDir } = await importUp(
     dir,
     'rnef.config'
@@ -185,6 +193,14 @@ export async function getConfig(dir: string): Promise<ConfigOutput> {
 
   if (validatedConfig.bundler) {
     assignOriginToCommand(validatedConfig.bundler, api, validatedConfig);
+  }
+
+  for (const internalPlugin of internalPlugins) {
+    assignOriginToCommand(
+      internalPlugin({ root: projectRoot, platforms }),
+      api,
+      validatedConfig
+    );
   }
 
   const outputConfig: ConfigOutput = {
