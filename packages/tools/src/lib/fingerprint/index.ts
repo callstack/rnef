@@ -10,6 +10,11 @@ const EXCLUDED_SOURCES = [
   'expoAutolinkingConfig:android',
 ];
 
+export type FingerprintSources = {
+  extraSources: string[];
+  ignorePaths: string[];
+};
+
 export type FingerprintOptions = {
   platform: 'ios' | 'android';
   extraSources: string[];

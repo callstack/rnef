@@ -20,7 +20,7 @@ export async function packageAar(
 
   const tasks = [`assemble${toPascalCase(args.variant)}`];
 
-  await runGradleAar({ tasks, aarProject, args });
+  await runGradleAar({ tasks, aarProject, variant: args.variant });
   outro('Success 🎉.');
 }
 
@@ -30,7 +30,12 @@ export async function localPublishAar(
 ) {
   const tasks = ['publishToMavenLocal'];
 
-  await runGradleAar({ tasks, aarProject, args, isPublishTask: true });
+  await runGradleAar({
+    tasks,
+    aarProject,
+    variant: args.variant,
+    isPublishTask: true,
+  });
   outro('Success 🎉.');
 }
 

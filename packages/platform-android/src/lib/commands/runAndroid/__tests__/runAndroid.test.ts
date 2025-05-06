@@ -342,7 +342,7 @@ test.each([['release'], ['debug'], ['staging']])(
   }
 );
 
-test('runAndroid runs gradle build with custom --appId, --appIdSuffix and --mainActivity', async () => {
+test.only('runAndroid runs gradle build with custom --appId, --appIdSuffix and --mainActivity', async () => {
   (spawn as Mock).mockImplementation((file, args) =>
     spawnMockImplementation(file, args)
   );

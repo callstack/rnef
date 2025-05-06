@@ -1,10 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import type { FingerprintSources } from '../fingerprint/index.js';
 import { nativeFingerprint } from '../fingerprint/index.js';
 import { getCacheRootPath } from '../project.js';
 import type { spinner } from '../prompts.js';
 
 export const BUILD_CACHE_DIR = 'remote-build';
+export const LOCAL_BUILD_CACHE_DIR = 'local-build';
 
 export type SupportedRemoteCacheProviders = 'github-actions';
 
@@ -49,17 +51,21 @@ export async function formatArtifactName({
   platform: 'ios' | 'android';
   traits: string[];
   root: string;
-  fingerprintOptions: { extraSources: string[]; ignorePaths: string[] };
+  fingerprintOptions: FingerprintSources;
 }): Promise<string> {
   const { hash } = await nativeFingerprint(root, {
-    platform,
     ...fingerprintOptions,
+    platform,
   });
   return `rnef-${platform}-${traits.join('-')}-${hash}`;
 }
 
 export function getLocalArtifactPath(artifactName: string) {
   return path.join(getCacheRootPath(), BUILD_CACHE_DIR, artifactName);
+}
+
+export function getLocalBuildPath(artifactName: string) {
+  return path.join(getCacheRootPath(), LOCAL_BUILD_CACHE_DIR, artifactName);
 }
 
 export function getLocalBinaryPath(artifactPath: string) {

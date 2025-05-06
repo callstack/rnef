@@ -4,10 +4,14 @@ import type {
   AndroidProjectConfig,
   Config,
 } from '@react-native-community/cli-types';
-import type { SupportedRemoteCacheProviders } from '@rnef/tools';
+import type {
+  FingerprintSources,
+  SupportedRemoteCacheProviders,
+} from '@rnef/tools';
 import {
   fetchCachedBuild,
   formatArtifactName,
+  getLocalBuildCacheBinaryPath,
   intro,
   isInteractive,
   logger,
@@ -47,7 +51,7 @@ export async function runAndroid(
   args: Flags,
   projectRoot: string,
   remoteCacheProvider: SupportedRemoteCacheProviders | undefined,
-  fingerprintOptions: { extraSources: string[]; ignorePaths: string[] }
+  fingerprintOptions: FingerprintSources
 ) {
   intro('Running Android app');
 
@@ -59,22 +63,20 @@ export async function runAndroid(
   const mainTaskType = device ? 'assemble' : 'install';
   const tasks = args.tasks ?? [`${mainTaskType}${toPascalCase(args.variant)}`];
 
-  if (!args.binaryPath && args.remoteCache) {
-    const artifactName = await formatArtifactName({
-      platform: 'android',
-      traits: [args.variant],
-      root: projectRoot,
-      fingerprintOptions,
-    });
-    const cachedBuild = await fetchCachedBuild({
-      artifactName,
-      remoteCacheProvider,
-    });
-    if (cachedBuild) {
-      // @todo replace with a more generic way to pass binary path
-      args.binaryPath = cachedBuild.binaryPath;
-    }
-  }
+  const artifactName = await formatArtifactName({
+    platform: 'android',
+    traits: [args.variant],
+    root: projectRoot,
+    fingerprintOptions,
+  });
+
+  const binaryPath =
+    args.binaryPath ||
+    getLocalBuildCacheBinaryPath(artifactName) ||
+    (args.remoteCache
+      ? (await fetchCachedBuild({ artifactName, remoteCacheProvider }))
+          ?.binaryPath
+      : undefined);
 
   if (device) {
     if (!(await getDevices()).find((d) => d === device.deviceId)) {
@@ -82,8 +84,16 @@ export async function runAndroid(
       device.deviceId = await tryLaunchEmulator(device.readableName);
     }
     if (device.deviceId) {
-      await runGradle({ tasks, androidProject, args });
-      await tryInstallAppOnDevice(device, androidProject, args, tasks);
+      if (!binaryPath) {
+        await runGradle({ tasks, androidProject, args, artifactName });
+      }
+      await tryInstallAppOnDevice(
+        device,
+        androidProject,
+        args,
+        tasks,
+        binaryPath
+      );
       await tryLaunchAppOnDevice(device, androidProject, args);
     }
   } else {
@@ -98,15 +108,22 @@ export async function runAndroid(
       }
     }
 
-    await runGradle({ tasks, androidProject, args });
+    if (!binaryPath) {
+      await runGradle({ tasks, androidProject, args, artifactName });
+    }
 
     for (const device of await listAndroidDevices()) {
-      if (args.binaryPath) {
-        await tryInstallAppOnDevice(device, androidProject, args, tasks);
-      }
+      await tryInstallAppOnDevice(
+        device,
+        androidProject,
+        args,
+        tasks,
+        binaryPath
+      );
       await tryLaunchAppOnDevice(device, androidProject, args);
     }
   }
+
   outro('Success 🎉.');
 }
 

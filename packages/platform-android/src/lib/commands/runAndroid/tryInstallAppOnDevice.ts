@@ -15,7 +15,8 @@ export async function tryInstallAppOnDevice(
   device: DeviceData,
   androidProject: AndroidProject,
   args: Flags,
-  tasks: string[]
+  tasks: string[],
+  binaryPath: string | undefined
 ) {
   let deviceId;
   if (!device.deviceId) {
@@ -27,7 +28,7 @@ export async function tryInstallAppOnDevice(
     deviceId = device.deviceId;
   }
   let pathToApk: string;
-  if (!args.binaryPath) {
+  if (!binaryPath) {
     const outputFilePath = await findOutputFile(
       androidProject,
       tasks,
@@ -41,7 +42,7 @@ export async function tryInstallAppOnDevice(
     }
     pathToApk = outputFilePath;
   } else {
-    pathToApk = args.binaryPath;
+    pathToApk = binaryPath;
   }
 
   const adbArgs = ['-s', deviceId, 'install', '-r', '-d'];

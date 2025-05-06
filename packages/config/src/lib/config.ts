@@ -1,6 +1,7 @@
 import * as fs from 'node:fs';
 import { createRequire } from 'node:module';
 import * as path from 'node:path';
+import type { FingerprintSources } from '@rnef/tools';
 import { color, logger } from '@rnef/tools';
 import type { ValidationError } from 'joi';
 import { ConfigTypeSchema } from './schema.js';
@@ -22,10 +23,7 @@ export type PluginApi = {
   getReactNativePath: () => string;
   getPlatforms: () => { [platform: string]: object };
   getRemoteCacheProvider: () => SupportedRemoteCacheProviders | undefined;
-  getFingerprintOptions: () => {
-    extraSources: string[];
-    ignorePaths: string[];
-  };
+  getFingerprintOptions: () => FingerprintSources;
 };
 
 type SupportedRemoteCacheProviders = 'github-actions';
@@ -161,10 +159,7 @@ export async function getConfig(dir: string): Promise<ConfigOutput> {
       validatedConfig.platforms as { [platform: string]: object },
     getRemoteCacheProvider: () => validatedConfig.remoteCacheProvider,
     getFingerprintOptions: () =>
-      validatedConfig.fingerprint as {
-        extraSources: string[];
-        ignorePaths: string[];
-      },
+      validatedConfig.fingerprint as FingerprintSources,
   };
 
   if (validatedConfig.plugins) {
