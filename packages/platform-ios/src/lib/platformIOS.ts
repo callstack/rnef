@@ -17,13 +17,17 @@ const runOptions = getRunOptions({ platformName: 'ios' });
 export const platformIOS =
   (pluginConfig?: IOSProjectConfig) =>
   (api: PluginApi): PlatformOutput => {
-    const projectRoot = api.getProjectRoot();
-    const iosConfig = getValidProjectConfig('ios', projectRoot, pluginConfig);
     api.registerCommand({
       name: 'build:ios',
       description: 'Build iOS app.',
       action: async (args) => {
         intro('Building iOS app');
+        const projectRoot = api.getProjectRoot();
+        const iosConfig = getValidProjectConfig(
+          'ios',
+          projectRoot,
+          pluginConfig
+        );
         await createBuild({
           platformName: 'ios',
           projectConfig: iosConfig,
@@ -41,6 +45,12 @@ export const platformIOS =
       description: 'Run iOS app.',
       action: async (args) => {
         intro('Running iOS app');
+        const projectRoot = api.getProjectRoot();
+        const iosConfig = getValidProjectConfig(
+          'ios',
+          projectRoot,
+          pluginConfig
+        );
         await createRun({
           platformName: 'ios',
           projectConfig: iosConfig,
@@ -61,7 +71,16 @@ export const platformIOS =
     return {
       name: '@rnef/platform-ios',
       description: 'RNEF plugin for everything iOS.',
-      autolinkingConfig: { project: { ...iosConfig } },
+      autolinkingConfig: {
+        get project() {
+          const iosConfig = getValidProjectConfig(
+            'ios',
+            api.getProjectRoot(),
+            pluginConfig
+          );
+          return { ...iosConfig };
+        },
+      },
     };
   };
 

@@ -11,19 +11,23 @@ type PluginConfig = AndroidProjectConfig;
 export const platformAndroid =
   (pluginConfig?: PluginConfig) =>
   (api: PluginApi): PlatformOutput => {
-    const androidConfig = getValidProjectConfig(
-      api.getProjectRoot(),
-      pluginConfig
-    );
-    registerBuildCommand(api, androidConfig);
-    registerRunCommand(api, androidConfig);
-    registerCreateKeystoreCommand(api, androidConfig);
+    registerBuildCommand(api, pluginConfig);
+    registerRunCommand(api, pluginConfig);
+    registerCreateKeystoreCommand(api, pluginConfig);
     registerSignCommand(api);
 
     return {
       name: '@rnef/platform-android',
       description: 'RNEF plugin for everything Android.',
-      autolinkingConfig: { project: { ...androidConfig } },
+      autolinkingConfig: {
+        get project() {
+          const androidConfig = getValidProjectConfig(
+            api.getProjectRoot(),
+            pluginConfig
+          );
+          return { ...androidConfig };
+        },
+      },
     };
   };
 
