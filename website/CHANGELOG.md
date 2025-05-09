@@ -1,5 +1,11 @@
 # rnef-docs
 
+## 1.0.3
+
+### Patch Changes
+
+- 3428485: chore: add kebab-case aliases for start command
+
 ## 1.0.2
 
 ### Patch Changes

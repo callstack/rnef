@@ -5,6 +5,6 @@
     "publish-local:aar": "pnpm package:aar && rnef publish-local:aar --module-name helloworldreact"
   },
   "devDependencies": {
-    "@rnef/plugin-brownfield-android": "^0.7.6"
+    "@rnef/plugin-brownfield-android": "^0.7.7"
   }
 }
