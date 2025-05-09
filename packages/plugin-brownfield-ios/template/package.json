@@ -4,7 +4,7 @@
     "package:ios": "rnef package:ios --scheme HelloWorldReact --configuration Release"
   },
   "dependencies": {
-    "@callstack/react-native-brownfield": "1.0.0-rc.2"
+    "@callstack/react-native-brownfield": "1.0.1"
   },
   "devDependencies": {
     "@rnef/plugin-brownfield-ios": "^0.7.14"
