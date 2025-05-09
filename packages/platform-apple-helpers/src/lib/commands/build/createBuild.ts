@@ -86,7 +86,7 @@ async function validateArgs(args: BuildFlags) {
     process.exit(1);
   }
 
-  if (!args.destination) {
+  if (!args.destination && !args.destinations) {
     if (isInteractive()) {
       const destination = await promptSelect({
         message: 'Select destination for a generic build',
