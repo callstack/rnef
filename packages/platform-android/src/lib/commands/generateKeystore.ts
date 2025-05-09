@@ -12,15 +12,20 @@ import {
   RnefError,
   spawn,
 } from '@rnef/tools';
+import { getValidProjectConfig } from './getValidProjectConfig.js';
 
 export function registerCreateKeystoreCommand(
   api: PluginApi,
-  androidConfig: AndroidProjectConfig
+  pluginConfig: AndroidProjectConfig | undefined
 ) {
   api.registerCommand({
     name: 'create-keystore:android',
     description: 'Creates a keystore file for signing Android release builds.',
     action: async (args) => {
+      const androidConfig = getValidProjectConfig(
+        api.getProjectRoot(),
+        pluginConfig
+      );
       await generateKeystore(androidConfig, args);
     },
     options: generateKeystoreOptions,
