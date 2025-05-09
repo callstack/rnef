@@ -1,5 +1,12 @@
 # @rnef/plugin-metro
 
+## 0.7.7
+
+### Patch Changes
+
+- 3428485: chore: add kebab-case aliases for start command
+  - @rnef/tools@0.7.7
+
 ## 0.7.6
 
 ### Patch Changes
