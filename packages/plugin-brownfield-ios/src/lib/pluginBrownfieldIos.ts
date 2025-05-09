@@ -21,7 +21,11 @@ export const pluginBrownfieldIos =
         intro('Packaging iOS project');
 
         const projectRoot = api.getProjectRoot();
-        const iosConfig = getValidProjectConfig('ios', projectRoot, pluginConfig);
+        const iosConfig = getValidProjectConfig(
+          'ios',
+          projectRoot,
+          pluginConfig
+        );
         const { derivedDataDir } = getBuildPaths('ios');
 
         const destinations = args.destinations ?? [
@@ -32,6 +36,12 @@ export const pluginBrownfieldIos =
         const buildFolder = args.buildFolder ?? derivedDataDir;
         const configuration = args.configuration ?? 'Debug';
 
+        if (!args.scheme) {
+          throw new RnefError(
+            'Scheme is required. Please provide "--scheme" flag.'
+          );
+        }
+
         await createBuild({
           platformName: 'ios',
           projectConfig: iosConfig,
@@ -39,12 +49,6 @@ export const pluginBrownfieldIos =
           projectRoot,
           reactNativePath: api.getReactNativePath(),
         });
-
-        if (!args.scheme) {
-          throw new RnefError(
-            'Scheme is required. Please provide "--scheme" flag.'
-          );
-        }
 
         await mergeFrameworks({
           scheme: args.scheme,
