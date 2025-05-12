@@ -2,20 +2,21 @@ import {
   color,
   logger,
   RnefError,
+  saveLocalBuildCache,
   spawn,
   spinner,
   type SubprocessError,
 } from '@rnef/tools';
-import type { AarProject, PackageAarFlags } from './aar/packageAar.js';
-import type { PublishLocalAarFlags } from './aar/publishLocalAar.js';
+import type { AarProject } from './aar/packageAar.js';
 import type { BuildFlags } from './buildAndroid/buildAndroid.js';
 import { getAdbPath, getDevices } from './runAndroid/adb.js';
+import { findOutputFile } from './runAndroid/findOutputFile.js';
 import type { AndroidProject, Flags } from './runAndroid/runAndroid.js';
 
 type RunGradleAarArgs = {
   tasks: string[];
   aarProject: AarProject;
-  args: PackageAarFlags | PublishLocalAarFlags;
+  variant: string;
   isPublishTask?: boolean;
 };
 
@@ -23,6 +24,7 @@ export type RunGradleArgs = {
   tasks: string[];
   androidProject: AndroidProject;
   args: BuildFlags | Flags;
+  artifactName: string;
 };
 
 const getCleanedErrorMessage = (error: SubprocessError) => {
@@ -37,10 +39,8 @@ export async function runGradle({
   tasks,
   androidProject,
   args,
+  artifactName,
 }: RunGradleArgs) {
-  if ('binaryPath' in args) {
-    return;
-  }
   const humanReadableTasks = tasks.join(', ');
 
   logger.log(`Build Settings:
@@ -96,22 +96,23 @@ Tasks     ${color.bold(humanReadableTasks)}`);
         'Failed to build the app. See the error above for details from Gradle.'
     );
   }
+
+  const outputFilePath = await findOutputFile(androidProject, tasks);
+  if (outputFilePath) {
+    saveLocalBuildCache(artifactName, outputFilePath);
+  }
 }
 
 export async function runGradleAar({
   tasks,
   aarProject,
-  args,
+  variant,
   isPublishTask = false,
 }: RunGradleAarArgs) {
-  if ('binaryPath' in args) {
-    return;
-  }
   const loader = spinner({ indicator: 'timer' });
   const message = isPublishTask
     ? 'Publishing the AAR'
-    : // @ts-expect-error args.variant is not set for publish task
-      `Building the AAR with Gradle in ${args.variant} build variant`;
+    : `Building the AAR with Gradle in ${variant} build variant`;
 
   loader.start(message);
   const gradleArgs = getTaskNames(aarProject.moduleName, tasks);
@@ -126,8 +127,7 @@ export async function runGradleAar({
     loader.stop(
       isPublishTask
         ? 'Published the AAR to local maven (~/.m2/repository)'
-        : // @ts-expect-error args.variant is not set for publish task
-          `Built the AAR in ${args.variant} build variant.`
+        : `Built the AAR in ${variant} build variant.`
     );
   } catch (error) {
     loader.stop(`Failed to ${isPublishTask ? 'publish' : 'build'} the AAR`);

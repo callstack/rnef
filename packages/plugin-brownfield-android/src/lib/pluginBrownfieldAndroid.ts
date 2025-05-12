@@ -6,14 +6,13 @@ import {
   type PackageAarFlags,
   packageAarOptions,
   publishLocalAar,
-  type PublishLocalAarFlags,
   publishLocalAarOptions,
 } from '@rnef/platform-android';
 import { intro, RnefError } from '@rnef/tools';
 
 const getAarConfig = (
-  args: PackageAarFlags | PublishLocalAarFlags,
-  androidConfig: AndroidProjectConfig,
+  args: PackageAarFlags,
+  androidConfig: AndroidProjectConfig
 ) => {
   const config = {
     sourceDir: androidConfig.sourceDir,
@@ -48,14 +47,14 @@ export const pluginBrownfieldAndroid =
     api.registerCommand({
       name: 'publish-local:aar',
       description: 'Publishes a AAR to local maven repo',
-      action: async (args: PublishLocalAarFlags) => {
+      action: async (args: PackageAarFlags) => {
         intro('Publishing AAR');
 
         const androidConfig = projectConfig(projectRoot, pluginConfig);
 
         if (androidConfig) {
           const config = getAarConfig(args, androidConfig);
-          await publishLocalAar(config, args);
+          await publishLocalAar(config);
         } else {
           throw new RnefError('Android project not found.');
         }

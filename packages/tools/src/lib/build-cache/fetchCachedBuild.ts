@@ -1,7 +1,5 @@
-import path from 'node:path';
 import { color } from '../color.js';
 import logger from '../logger.js';
-import { getProjectRoot } from '../project.js';
 import { spinner } from '../prompts.js';
 import {
   getLocalBinaryPath,
@@ -9,7 +7,6 @@ import {
   type SupportedRemoteCacheProviders,
 } from './common.js';
 import type { LocalBuild } from './localBuildCache.js';
-import { queryLocalBuildCache } from './localBuildCache.js';
 import { createRemoteBuildCache } from './remoteBuildCache.js';
 
 export type Distribution = 'simulator' | 'device';
@@ -26,9 +23,9 @@ type FetchCachedBuildOptions = {
 export async function fetchCachedBuild({
   artifactName,
   remoteCacheProvider,
-}: FetchCachedBuildOptions): Promise<LocalBuild | null> {
+}: FetchCachedBuildOptions): Promise<LocalBuild | undefined> {
   if (remoteCacheProvider === null) {
-    return null;
+    return undefined;
   }
   if (remoteCacheProvider === undefined) {
     logger.warn(`No remote cache provider set. You won't be able to access reusable builds from e.g. GitHub Actions. 
@@ -40,32 +37,21 @@ To configure it, set the "remoteCacheProvider" key in ${color.cyan(
 }
 To disable this warning, set "remoteCacheProvider" to null.
 Proceeding with local build.`);
-    return null;
-  }
-  const loader = spinner();
-  loader.start('Looking for a local cached build');
-
-  const root = getProjectRoot();
-
-  const localBuild = queryLocalBuildCache(artifactName);
-  if (localBuild != null) {
-    loader.stop(`Found local cached build: ${color.cyan(localBuild.name)}`);
-    return localBuild;
+    return undefined;
   }
 
   const remoteBuildCache = await createRemoteBuildCache(remoteCacheProvider);
   if (!remoteBuildCache) {
-    loader.stop(`No remote cache provider found, skipping.`);
-    return null;
+    return undefined;
   }
-
-  loader.stop(`No local build cached. Checking ${remoteBuildCache.name}.`);
+  const loader = spinner();
+  loader.start(`Looking for remote build cache on ${remoteBuildCache.name}.`);
 
   const remoteBuild = await remoteBuildCache.query({ artifactName });
   if (!remoteBuild) {
     loader.start('');
-    loader.stop(`No cached build found for "${artifactName}".`);
-    return null;
+    loader.stop(`No remotely cached build found for "${artifactName}".`);
+    return undefined;
   }
 
   loader.start(`Downloading cached build from ${remoteBuildCache.name}`);
@@ -77,12 +63,10 @@ Proceeding with local build.`);
   const binaryPath = getLocalBinaryPath(fetchedBuild.path);
   if (!binaryPath) {
     loader.stop(`No binary found for "${artifactName}".`);
-    return null;
+    return undefined;
   }
 
-  loader.stop(
-    `Downloaded cached build: ${color.cyan(path.relative(root, binaryPath))}.`
-  );
+  loader.stop(`Downloaded cached build: ${color.cyan(binaryPath)}.`);
 
   return {
     name: fetchedBuild.name,

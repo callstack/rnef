@@ -1,10 +1,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import type { SupportedRemoteCacheProviders } from '@rnef/tools';
+import type {
+  FingerprintSources,
+  SupportedRemoteCacheProviders,
+} from '@rnef/tools';
 import {
   color,
   fetchCachedBuild,
   formatArtifactName,
+  getLocalBuildCacheBinaryPath,
   isInteractive,
   logger,
   promptSelect,
@@ -45,27 +49,23 @@ export const createRun = async ({
   args: RunFlags;
   projectRoot: string;
   remoteCacheProvider: SupportedRemoteCacheProviders | undefined;
-  fingerprintOptions: { extraSources: string[]; ignorePaths: string[] };
+  fingerprintOptions: FingerprintSources;
   reactNativePath: string;
 }) => {
-  if (!args.binaryPath && args.remoteCache) {
-    const artifactName = await formatArtifactName({
-      platform: 'ios',
-      traits: [args.destination ?? 'simulator', args.configuration ?? 'Debug'],
-      root: projectRoot,
-      fingerprintOptions,
-    });
-    const cachedBuild = await fetchCachedBuild({
-      artifactName,
-      remoteCacheProvider,
-    });
-    if (cachedBuild) {
-      // @todo replace with a more generic way to pass binary path
-      args.binaryPath = cachedBuild.binaryPath;
-    }
-  }
-
   validateArgs(args, projectRoot);
+  const artifactName = await formatArtifactName({
+    platform: 'ios',
+    traits: [args.destination ?? 'simulator', args.configuration ?? 'Debug'],
+    root: projectRoot,
+    fingerprintOptions,
+  });
+  const binaryPath =
+    args.binaryPath ||
+    getLocalBuildCacheBinaryPath(artifactName) ||
+    args.remoteCache
+      ? (await fetchCachedBuild({ artifactName, remoteCacheProvider }))
+          ?.binaryPath
+      : undefined;
 
   // Check if the device argument looks like a UDID
   // (assuming UDIDs are alphanumeric and have specific length)
@@ -86,6 +86,8 @@ export const createRun = async ({
       udid,
       deviceName,
       reactNativePath,
+      artifactName,
+      binaryPath,
     });
     await runOnMac(appPath);
     return;
@@ -99,6 +101,8 @@ export const createRun = async ({
       udid,
       deviceName,
       reactNativePath,
+      artifactName,
+      binaryPath,
     });
     if (scheme) {
       await runOnMacCatalyst(appPath, scheme);
@@ -133,6 +137,8 @@ export const createRun = async ({
           udid: device.udid,
           projectRoot,
           reactNativePath,
+          artifactName,
+          binaryPath,
         }),
       ]);
 
@@ -146,6 +152,8 @@ export const createRun = async ({
         udid: device.udid,
         projectRoot,
         reactNativePath,
+        artifactName,
+        binaryPath,
       });
       await runOnDevice(device, appPath, projectConfig.sourceDir);
     }
@@ -187,6 +195,8 @@ export const createRun = async ({
           udid: simulator.udid,
           projectRoot,
           reactNativePath,
+          artifactName,
+          binaryPath,
         }),
       ]);
       await runOnSimulator(simulator, appPath, infoPlistPath);
