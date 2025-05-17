@@ -1,7 +1,7 @@
 {
   "name": "rnef-plugin-repack-template",
   "devDependencies": {
-    "@rnef/plugin-repack": "^0.7.8",
+    "@rnef/plugin-repack": "^0.7.9",
     "@callstack/repack": "^5.0.3",
     "@rspack/core": "^1.2.8",
     "@swc/helpers": "^0.5.15"
