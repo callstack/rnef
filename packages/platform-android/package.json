@@ -1,6 +1,6 @@
 {
   "name": "@rnef/platform-android",
-  "version": "0.7.8",
+  "version": "0.7.9",
   "type": "module",
   "exports": {
     "types": "./dist/src/index.d.ts",
@@ -17,13 +17,13 @@
   },
   "dependencies": {
     "@react-native-community/cli-config-android": "^18.0.0",
-    "@rnef/tools": "^0.7.8",
+    "@rnef/tools": "^0.7.9",
     "adm-zip": "^0.5.16",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
     "@react-native-community/cli-types": "^18.0.0",
-    "@rnef/config": "^0.7.8",
+    "@rnef/config": "^0.7.9",
     "@types/adm-zip": "^0.5.7"
   },
   "publishConfig": {
