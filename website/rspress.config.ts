@@ -1,6 +1,7 @@
 import * as path from 'node:path';
 import { pluginCallstackTheme } from '@callstack/rspress-theme/plugin';
 import { pluginLlms } from '@rspress/plugin-llms';
+import { pluginOpenGraph } from 'rsbuild-plugin-open-graph';
 import { defineConfig } from 'rspress/config';
 import pluginSitemap from 'rspress-plugin-sitemap';
 import vercelPluginAnalytics from 'rspress-plugin-vercel-analytics';
@@ -16,6 +17,22 @@ export default defineConfig({
   logo: {
     light: '/logo.svg',
     dark: '/logo.svg',
+  },
+  builderConfig: {
+    plugins: [
+      pluginOpenGraph({
+        title: 'React Native Enterprise Framework',
+        type: 'website',
+        url: 'https://rnef.dev',
+        image: 'https://rnef.dev/og-image.png',
+        description:
+          'A successor to Community CLI with focus on modularity, build reuse and incremental adoption',
+        twitter: {
+          site: '@rnef_dev',
+          card: 'summary_large_image',
+        },
+      }),
+    ],
   },
   themeConfig: {
     socialLinks: [
