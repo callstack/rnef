@@ -47,7 +47,15 @@ export async function runAndroid(
   args: Flags,
   projectRoot: string,
   remoteCacheProvider: null | (() => RemoteBuildCache) | undefined,
-  fingerprintOptions: { extraSources: string[]; ignorePaths: string[] }
+  fingerprintOptions: { extraSources: string[]; ignorePaths: string[] },
+  startDevServer: (options: {
+    root: string;
+    // TODO fix type
+    args: any;
+    reactNativeVersion: string;
+    reactNativePath: string;
+    platforms: Record<string, object>;
+  }) => void
 ) {
   intro('Running Android app');
 
@@ -75,6 +83,18 @@ export async function runAndroid(
       args.binaryPath = cachedBuild.binaryPath;
     }
   }
+
+  logger.info('Starting dev server...');
+  startDevServer({
+    root: projectRoot,
+    reactNativePath: './node_modules/react-native',
+    reactNativeVersion: '0.79',
+    platforms: { ios: {}, android: {} },
+    args: {
+      interactive: isInteractive(),
+      clientLogs: true,
+    },
+  });
 
   if (device) {
     if (!(await getDevices()).find((d) => d === device.deviceId)) {
