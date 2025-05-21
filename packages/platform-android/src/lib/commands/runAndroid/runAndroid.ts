@@ -55,7 +55,7 @@ export async function runAndroid(
     reactNativeVersion: string;
     reactNativePath: string;
     platforms: Record<string, object>;
-  }) => Promise<void>
+  }) => void
 ) {
   intro('Running Android app');
 
@@ -84,6 +84,18 @@ export async function runAndroid(
     }
   }
 
+  logger.info('Starting dev server...');
+  startDevServer({
+    root: projectRoot,
+    reactNativePath: './node_modules/react-native',
+    reactNativeVersion: '0.79',
+    platforms: { ios: {}, android: {} },
+    args: {
+      interactive: isInteractive(),
+      clientLogs: true,
+    },
+  });
+
   if (device) {
     if (!(await getDevices()).find((d) => d === device.deviceId)) {
       // deviceId is undefined until it's launched, hence overwriting it here
@@ -105,14 +117,6 @@ export async function runAndroid(
         await tryLaunchEmulator();
       }
     }
-    console.log('xd');
-    startDevServer({
-      root: projectRoot,
-      reactNativePath: './node_modules/react-native',
-      reactNativeVersion: '0.79',
-      platforms: { ios: {}, android: {} },
-      args,
-    });
 
     await runGradle({ tasks, androidProject, args });
 

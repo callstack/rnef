@@ -44,7 +44,7 @@ export type PluginApi = {
     extraSources: string[];
     ignorePaths: string[];
   };
-  getBundlerStart: () => ({ args: any }) => Promise<void>;
+  getBundlerStart: () => ({ args }: { args: any }) => void;
 };
 
 type PluginType = (args: PluginApi) => PluginOutput;
@@ -85,7 +85,7 @@ export type ConfigType = {
   plugins?: PluginType[];
   platforms?: Record<string, PlatformType>;
   commands?: Array<CommandType>;
-  remoteCacheProvider?: null | 'github-actions' |(() => RemoteBuildCache);
+  remoteCacheProvider?: null | 'github-actions' | (() => RemoteBuildCache);
   fingerprint?: {
     extraSources?: string[];
     ignorePaths?: string[];
@@ -175,6 +175,8 @@ export async function getConfig(
     process.exit(1);
   }
 
+  let bundler: BundlerPluginOutput | undefined;
+
   const api = {
     registerCommand: (command: CommandType) => {
       validatedConfig.commands = [...(validatedConfig.commands || []), command];
@@ -200,21 +202,21 @@ export async function getConfig(
       },
     getBundlerStart:
       () =>
-      ({ args: any }) =>
-        bundler?.start({
+      ({ args }: { args: any }) => {
+        return bundler?.start({
           root: api.getProjectRoot(),
           args,
           reactNativeVersion: api.getReactNativeVersion(),
           reactNativePath: api.getReactNativePath(),
           platforms: api.getPlatforms(),
-        }),
+        });
+      },
   };
 
   const platforms: Record<string, PlatformOutput> = {};
   if (validatedConfig.platforms) {
     // platforms register commands and custom platform functionality (TBD)
     for (const platform in validatedConfig.platforms) {
-      // @ts-expect-error tbd
       const platformOutput = validatedConfig.platforms[platform](api);
       platforms[platform] = platformOutput;
     }
@@ -231,7 +233,6 @@ export async function getConfig(
     // @ts-expect-error tbd
     bundler = assignOriginToCommand(
       validatedConfig.bundler,
-      // @ts-expect-error tbd
       api,
       validatedConfig
     );
@@ -249,6 +250,8 @@ export async function getConfig(
     root: projectRoot,
     commands: validatedConfig.commands ?? [],
     platforms: platforms ?? {},
+    // @ts-expect-error tbd
+    bundler,
     ...api,
   };
 
