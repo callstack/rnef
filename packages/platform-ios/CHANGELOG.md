@@ -1,5 +1,13 @@
 # @rnef/platform-ios
 
+## 0.8.0
+
+### Patch Changes
+
+- Updated dependencies [80cc3d1]
+  - @rnef/platform-apple-helpers@0.8.0
+  - @rnef/tools@0.8.0
+
 ## 0.7.12
 
 ### Patch Changes
