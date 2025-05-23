@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import type { PluginApi, PluginOutput } from '@rnef/config';
 import type { RemoteBuildCache } from '@rnef/tools';
 import {
@@ -8,6 +10,8 @@ import {
   logger,
   RnefError,
 } from '@rnef/tools';
+import AdmZip from 'adm-zip';
+import * as tar from 'tar';
 
 type Flags = {
   platform?: 'ios' | 'android';
@@ -114,12 +118,43 @@ async function remoteCache({
       break;
     }
     case 'upload': {
-      const uploadedArtifact = await remoteBuildCache.upload({ artifactName });
-      if (isJsonOutput) {
-        console.log(JSON.stringify(uploadedArtifact, null, 2));
+      const localArtifactPath = getLocalArtifactPath(artifactName);
+      const binaryPath = getLocalBinaryPath(localArtifactPath);
+      if (!binaryPath) {
+        throw new RnefError(`No binary found for "${artifactName}".`);
+      }
+      const zip = new AdmZip();
+      const absoluteTarballPath = path.join(localArtifactPath, 'app.tar.gz');
+      if (fs.statSync(binaryPath).isDirectory()) {
+        const appName = path.basename(binaryPath);
+        await tar.create(
+          {
+            file: absoluteTarballPath,
+            cwd: path.dirname(binaryPath),
+            gzip: true,
+            filter: (filePath) => filePath.includes(appName),
+          },
+          [appName]
+        );
+        zip.addLocalFile(absoluteTarballPath);
       } else {
-        logger.log(`- name: ${uploadedArtifact.name}
+        zip.addLocalFile(binaryPath);
+      }
+      const buffer = zip.toBuffer();
+
+      try {
+        const uploadedArtifact = await remoteBuildCache.upload({
+          artifactName,
+          buffer,
+        });
+        if (isJsonOutput) {
+          console.log(JSON.stringify(uploadedArtifact, null, 2));
+        } else {
+          logger.log(`- name: ${uploadedArtifact.name}
 - url: ${uploadedArtifact.url}`);
+        }
+      } finally {
+        fs.unlinkSync(absoluteTarballPath);
       }
       break;
     }

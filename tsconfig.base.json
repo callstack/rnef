@@ -35,7 +35,8 @@
       "@rnef/plugin-brownfield-android": [
         "packages/plugin-brownfield-android/src/index.ts"
       ],
-      "@rnef/provider-github": ["packages/provider-github/src/index.ts"]
+      "@rnef/provider-github": ["packages/provider-github/src/index.ts"],
+      "@rnef/provider-s3": ["packages/provider-s3/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
