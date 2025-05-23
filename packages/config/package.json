@@ -1,6 +1,6 @@
 {
   "name": "@rnef/config",
-  "version": "0.7.12",
+  "version": "0.8.0",
   "type": "module",
   "exports": {
     "types": "./dist/src/index.d.ts",
@@ -15,8 +15,8 @@
   },
   "dependencies": {
     "@babel/code-frame": "^7.26.2",
-    "@rnef/provider-github": "^0.7.12",
-    "@rnef/tools": "^0.7.12",
+    "@rnef/provider-github": "^0.8.0",
+    "@rnef/tools": "^0.8.0",
     "joi": "^17.13.3",
     "tslib": "^2.3.0"
   },

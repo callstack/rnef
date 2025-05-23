@@ -1,5 +1,11 @@
 # rnef-docs
 
+## 1.0.5
+
+### Patch Changes
+
+- 80cc3d1: unify --destination and --destinations flags; fix building universal (device+simu) iOS brownfield framework
+
 ## 1.0.4
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @rnef/config
 
+## 0.8.0
+
+### Patch Changes
+
+- Updated dependencies [70aa414]
+  - @rnef/provider-github@0.8.0
+  - @rnef/tools@0.8.0
+
 ## 0.7.12
 
 ### Patch Changes
