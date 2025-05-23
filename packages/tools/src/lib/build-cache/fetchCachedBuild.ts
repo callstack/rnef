@@ -66,6 +66,15 @@ To disable this warning, set the provider to null:
 
   loader.stop(`No local build cached. Checking ${remoteBuildCache.name}.`);
 
+  const availabilityState = await remoteBuildCache.getAvailabilityState();
+  if (!availabilityState.isAvailable) {
+    logger.warn(
+      `${remoteBuildCache.name} caching is not available: ${availabilityState.reason}`
+    );
+
+    return null;
+  }
+
   const localArtifactPath = getLocalArtifactPath(artifactName);
   const response = await remoteBuildCache.download({ artifactName });
   loader.start(`Downloading cached build from ${remoteBuildCache.name}`);

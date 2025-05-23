@@ -1,9 +1,14 @@
-import type { RemoteArtifact, RemoteBuildCache } from '@rnef/tools';
+import type {
+  CacheAvailabilityState,
+  RemoteArtifact,
+  RemoteBuildCache,
+} from '@rnef/tools';
 import {
   deleteGitHubArtifacts,
   fetchGitHubArtifactsByName,
 } from './artifacts.js';
 import { detectGitHubRepoDetails, type GitHubRepoDetails } from './config.js';
+import { getGitRemote } from './getGitRemote.js';
 
 export class GitHubBuildCache implements RemoteBuildCache {
   name = 'GitHub';
@@ -17,6 +22,15 @@ export class GitHubBuildCache implements RemoteBuildCache {
         token: config.token,
       };
     }
+  }
+
+  async getAvailabilityState(): Promise<CacheAvailabilityState> {
+    const gitRemote = await getGitRemote();
+    if (!gitRemote) {
+      return { isAvailable: false, reason: 'No git remote set.' };
+    }
+
+    return { isAvailable: true };
   }
 
   async getRepoDetails() {

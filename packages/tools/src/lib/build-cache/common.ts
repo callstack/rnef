@@ -17,6 +17,16 @@ export type LocalArtifact = {
   name: string;
 };
 
+export type CacheAvailabilityState =
+  | {
+      isAvailable: true;
+      reason?: undefined;
+    }
+  | {
+      isAvailable: false;
+      reason: string;
+    };
+
 /**
  * Interface for implementing remote build cache providers.
  * Remote cache providers allow storing and retrieving native build artifacts (e.g. APK, IPA)
@@ -25,6 +35,12 @@ export type LocalArtifact = {
 export interface RemoteBuildCache {
   /** Unique identifier for this cache provider, will be displayed in logs */
   name: string;
+
+  /**
+   * Check if the remote cache provider is enabled
+   * @returns True if the remote cache provider is enabled, false otherwise
+   */
+  getAvailabilityState(): Promise<CacheAvailabilityState>;
 
   /**
    * List available artifacts matching the given name pattern

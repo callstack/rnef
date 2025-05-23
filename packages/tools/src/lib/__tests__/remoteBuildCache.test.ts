@@ -1,5 +1,8 @@
 import { expect, test } from 'vitest';
-import type { RemoteBuildCache } from '../build-cache/common.js';
+import type {
+  CacheAvailabilityState,
+  RemoteBuildCache,
+} from '../build-cache/common.js';
 
 const uploadMock = vi.fn();
 
@@ -10,6 +13,11 @@ class DummyRemoteCacheProvider implements RemoteBuildCache {
       this.name = options.name;
     }
   }
+
+  async getAvailabilityState(): Promise<CacheAvailabilityState> {
+    return { isAvailable: true };
+  }
+
   async list({ artifactName }: { artifactName: string }) {
     return [{ name: artifactName, url: '/path/to/dummy' }];
   }
