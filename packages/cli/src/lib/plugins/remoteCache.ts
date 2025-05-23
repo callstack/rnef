@@ -125,7 +125,8 @@ async function remoteCache({
       }
       const zip = new AdmZip();
       const absoluteTarballPath = path.join(localArtifactPath, 'app.tar.gz');
-      if (fs.statSync(binaryPath).isDirectory()) {
+      const isAppDirectory = fs.statSync(binaryPath).isDirectory();
+      if (isAppDirectory) {
         const appName = path.basename(binaryPath);
         await tar.create(
           {
@@ -154,7 +155,9 @@ async function remoteCache({
 - url: ${uploadedArtifact.url}`);
         }
       } finally {
-        fs.unlinkSync(absoluteTarballPath);
+        if (isAppDirectory) {
+          fs.unlinkSync(absoluteTarballPath);
+        }
       }
       break;
     }

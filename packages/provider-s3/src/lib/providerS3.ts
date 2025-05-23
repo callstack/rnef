@@ -17,12 +17,13 @@ export class S3BuildCache implements RemoteBuildCache {
   name = 'S3';
   s3: clientS3.S3Client;
   bucket: string;
+  directory = 'rnef-artifacts';
   config: {
     bucket: string;
     region: string;
     accessKeyId: string;
     secretAccessKey: string;
-  } | null = null;
+  };
 
   constructor(config: {
     bucket: string;
@@ -51,7 +52,9 @@ export class S3BuildCache implements RemoteBuildCache {
     const artifacts = await this.s3.send(
       new clientS3.ListObjectsV2Command({
         Bucket: this.bucket,
-        Prefix: artifactName ? `builds/${artifactName}.zip` : 'builds/',
+        Prefix: artifactName
+          ? `${this.directory}/${artifactName}.zip`
+          : `${this.directory}/`,
       })
     );
     return (
@@ -70,7 +73,7 @@ export class S3BuildCache implements RemoteBuildCache {
     const res = await this.s3.send(
       new clientS3.GetObjectCommand({
         Bucket: this.bucket,
-        Key: `builds/${artifactName}.zip`,
+        Key: `${this.directory}/${artifactName}.zip`,
       })
     );
     const buffer = await readableStreamToBuffer(res.Body as Readable);
@@ -85,13 +88,13 @@ export class S3BuildCache implements RemoteBuildCache {
     await this.s3.send(
       new clientS3.DeleteObjectCommand({
         Bucket: this.bucket,
-        Key: `builds/${artifactName}.zip`,
+        Key: `${this.directory}/${artifactName}.zip`,
       })
     );
     return [
       {
         name: artifactName,
-        url: `s3://${this.bucket}/builds/${artifactName}.zip`,
+        url: `s3://${this.bucket}/${this.directory}/${artifactName}.zip`,
       },
     ];
   }
@@ -106,7 +109,7 @@ export class S3BuildCache implements RemoteBuildCache {
     await this.s3.send(
       new clientS3.PutObjectCommand({
         Bucket: this.bucket,
-        Key: `builds/${artifactName}.zip`,
+        Key: `${this.directory}/${artifactName}.zip`,
         Body: buffer,
         ContentLength: buffer.length,
         Metadata: {
@@ -116,7 +119,7 @@ export class S3BuildCache implements RemoteBuildCache {
     );
     return {
       name: artifactName,
-      url: `s3://${this.bucket}/builds/${artifactName}.zip`,
+      url: `s3://${this.bucket}/${this.directory}/${artifactName}.zip`,
     };
   }
 }
