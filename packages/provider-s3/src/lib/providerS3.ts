@@ -2,14 +2,13 @@ import * as clientS3 from '@aws-sdk/client-s3';
 import type { RemoteArtifact, RemoteBuildCache } from '@rnef/tools';
 import type { Readable } from 'stream';
 
-async function readableStreamToBuffer(
-  readableStream: Readable
-): Promise<Buffer> {
-  const chunks: Buffer[] = [];
-  return new Promise((resolve, reject) => {
-    readableStream.on('data', (chunk: Buffer) => chunks.push(chunk));
-    readableStream.on('end', () => resolve(Buffer.concat(chunks)));
-    readableStream.on('error', reject);
+function toWebStream(stream: Readable): ReadableStream {
+  return new ReadableStream({
+    start(controller) {
+      stream.on('data', (chunk) => controller.enqueue(chunk));
+      stream.on('end', () => controller.close());
+      stream.on('error', (err) => controller.error(err));
+    },
   });
 }
 
@@ -76,8 +75,11 @@ export class S3BuildCache implements RemoteBuildCache {
         Key: `${this.directory}/${artifactName}.zip`,
       })
     );
-    const buffer = await readableStreamToBuffer(res.Body as Readable);
-    return new Response(buffer);
+    return new Response(toWebStream(res.Body as Readable), {
+      headers: {
+        'content-length': String(res.ContentLength),
+      },
+    });
   }
 
   async delete({
@@ -125,12 +127,11 @@ export class S3BuildCache implements RemoteBuildCache {
 }
 
 export const providerS3 =
-  (options?: {
+  (options: {
     bucket: string;
     region: string;
     accessKeyId: string;
     secretAccessKey: string;
   }) =>
   (): RemoteBuildCache =>
-    // @ts-expect-error tbd
     new S3BuildCache(options);
