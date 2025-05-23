@@ -32,9 +32,10 @@ test('providerS3 implements list method returning an array of artifacts', async 
     new Response(JSON.stringify({ artifacts: ARTIFACTS.slice(0, limit) }))
   );
   const cacheProvider = providerS3({
-    owner: 'callstack',
-    repository: 'rnef',
-    token: 'TEST_TOKEN',
+    bucket: 'test-bucket',
+    region: 'test-region',
+    accessKeyId: 'test-access-key-id',
+    secretAccessKey: 'test-secret-access-key',
   })();
   const result = await cacheProvider.list({
     artifactName: 'rnef-android-debug-1234567890',
@@ -79,9 +80,10 @@ test('providerS3 implements download method returning a stream with artifact zip
     return Promise.reject(new Error('Unexpected URL'));
   });
   const cacheProvider = providerS3({
-    owner: 'callstack',
-    repository: 'rnef',
-    token: 'TEST_TOKEN',
+    bucket: 'test-bucket',
+    region: 'test-region',
+    accessKeyId: 'test-access-key-id',
+    secretAccessKey: 'test-secret-access-key',
   })();
   const response = await cacheProvider.download({
     artifactName: 'rnef-android-debug-1234567890',
@@ -120,9 +122,10 @@ test('providerS3 implements delete method', async () => {
     return Promise.reject(new Error('Unexpected URL'));
   });
   const cacheProvider = providerS3({
-    owner: 'callstack',
-    repository: 'rnef',
-    token: 'TEST_TOKEN',
+    bucket: 'test-bucket',
+    region: 'test-region',
+    accessKeyId: 'test-access-key-id',
+    secretAccessKey: 'test-secret-access-key',
   })();
   const response = await cacheProvider.delete({
     artifactName: 'rnef-android-debug-1234567890',
@@ -140,11 +143,12 @@ test('providerS3 implements delete method', async () => {
   ]);
 });
 
-test('providerS3 does not implement upload method', async () => {
+test('providerS3 implements upload method', async () => {
   const cacheProvider = providerS3({
-    owner: 'callstack',
-    repository: 'rnef',
-    token: 'TEST_TOKEN',
+    bucket: 'test-bucket',
+    region: 'test-region',
+    accessKeyId: 'test-access-key-id',
+    secretAccessKey: 'test-secret-access-key',
   })();
   await expect(
     cacheProvider.upload({ artifactName: 'rnef-android-debug-1234567890' })
