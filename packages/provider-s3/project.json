@@ -1,0 +1,12 @@
+{
+  "name": "provider-s3",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/provider-s3/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc"
+    }
+  }
+}

@@ -1,12 +1,10 @@
 {
-  "name": "@rnef/cli",
+  "name": "@rnef/provider-s3",
   "version": "0.7.12",
   "type": "module",
   "exports": {
-    "./package.json": "./package.json"
-  },
-  "bin": {
-    "rnef": "./dist/src/bin.js"
+    "types": "./dist/src/index.d.ts",
+    "import": "./dist/src/index.js"
   },
   "files": [
     "dist"
@@ -16,17 +14,9 @@
     "publish:verdaccio": "npm publish --registry http://localhost:4873 --userconfig ../../.npmrc"
   },
   "dependencies": {
-    "adm-zip": "^0.5.16",
-    "@react-native-community/cli-config": "^18.0.0",
-    "@rnef/config": "^0.7.12",
+    "@aws-sdk/client-s3": "^3.816.0",
     "@rnef/tools": "^0.7.12",
-    "commander": "^12.1.0",
-    "tar": "^7.4.3",
     "tslib": "^2.3.0"
-  },
-  "devDependencies": {
-    "@react-native-community/cli-types": "^18.0.0",
-    "@types/adm-zip": "^0.5.7"
   },
   "publishConfig": {
     "access": "public"
