@@ -4,7 +4,10 @@ import type {
   AndroidProjectConfig,
   Config,
 } from '@react-native-community/cli-types';
-import type { RemoteBuildCache } from '@rnef/tools';
+import type {
+  FingerprintAndroidPlatformConfig,
+  RemoteBuildCache,
+} from '@rnef/tools';
 import {
   fetchCachedBuild,
   formatArtifactName,
@@ -60,8 +63,12 @@ export async function runAndroid(
   const tasks = args.tasks ?? [`${mainTaskType}${toPascalCase(args.variant)}`];
 
   if (!args.binaryPath && args.remoteCache) {
-    const artifactName = await formatArtifactName({
+    const platformConfig: FingerprintAndroidPlatformConfig = {
       platform: 'android',
+      sourceDir: androidProject.sourceDir,
+    };
+    const artifactName = await formatArtifactName({
+      platformConfig,
       traits: [args.variant],
       root: projectRoot,
       fingerprintOptions,
