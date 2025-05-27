@@ -1,39 +1,49 @@
 import type {
-  FingerprintPlatform,
-  FingerprintPlatformSource,
+  FingerprintAndroidPlatformConfig,
+  FingerprintIosPlatformConfig,
+  FingerprintPlatformConfig,
+  FingerprintPlatformSources,
 } from './types.js';
 import { sourceDir } from './utils.js';
 
 const platformMap = {
-  ios: getIosPlatformSource,
-  android: getAndroidPlatformSources,
+  ios: buildIosPlatformSources,
+  android: buildAndroidPlatformSources,
 };
 
-export function getPlatformSources(
-  platform: FingerprintPlatform
-): FingerprintPlatformSource {
-  return platformMap[platform]() ?? [];
+export function buildPlatformSources(
+  config: FingerprintPlatformConfig
+): FingerprintPlatformSources {
+  // @ts-expect-error: Type 'FingerprintIosPlatformConfig' is not assignable to type 'never'
+  return platformMap[config.platform](config);
 }
 
-export function getIosPlatformSource(): FingerprintPlatformSource {
+export function buildIosPlatformSources(
+  config: FingerprintIosPlatformConfig
+): FingerprintPlatformSources {
   return {
     platform: 'ios',
-    sources: [sourceDir('ios', 'platform-ios')],
-    dirExcludes: ['ios/DerivedData', 'ios/Pods'],
+    sources: [sourceDir(config.sourceDir, 'platform-ios')],
+    dirExcludes: [
+      `${config.sourceDir}/${config.derrivedDataDir}`,
+      `${config.sourceDir}/Pods`,
+    ],
   };
 }
 
-export function getAndroidPlatformSources(): FingerprintPlatformSource {
+export function buildAndroidPlatformSources(
+  config: FingerprintAndroidPlatformConfig
+): FingerprintPlatformSources {
   return {
     platform: 'android',
-    sources: [sourceDir('android', 'platform-android')],
+    sources: [sourceDir(config.sourceDir, 'platform-android')],
     dirExcludes: [
-      'android/build',
-      'android/**/build',
-      'android/**/.cxx',
-      'android/local.properties',
-      'android/.idea',
-      'android/.gradle',
+      `${config.sourceDir}/build`,
+      `${config.sourceDir}/**/build`,
+      `${config.sourceDir}/**/.cxx`,
+      `${config.sourceDir}/local.properties`,
+      `${config.sourceDir}/.idea`,
+      `${config.sourceDir}/.gradle`,
     ],
   };
 }

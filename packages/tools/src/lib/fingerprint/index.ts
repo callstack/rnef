@@ -3,7 +3,7 @@ import type { FingerprintSource } from '@expo/fingerprint';
 import { createFingerprintAsync } from '@expo/fingerprint';
 import { RnefError } from '../error.js';
 import { processExtraSources } from './extra-sources.js';
-import { getPlatformSources } from './platform-sources.js';
+import { buildPlatformSources } from './platform-sources.js';
 import type { FingerprintOptions, FingerprintResult } from './types.js';
 
 const HASH_ALGORITHM = 'sha1';
@@ -19,9 +19,7 @@ export async function nativeFingerprint(
   path: string,
   options: FingerprintOptions
 ): Promise<FingerprintResult> {
-  const platform = options.platform;
-
-  const platformSources = getPlatformSources(platform);
+  const platformSources = buildPlatformSources(options.platformConfig);
   const extraSources = processExtraSources(
     options.extraSources,
     path,
@@ -29,9 +27,10 @@ export async function nativeFingerprint(
   );
 
   const fingerprint = await createFingerprintAsync(path, {
+    // Disable expo fingerprint built-in platform sources
     platforms: [],
-    dirExcludes: ['node_modules', ...platformSources.dirExcludes],
     extraSources: [...platformSources.sources, ...extraSources],
+    dirExcludes: ['node_modules', ...platformSources.dirExcludes],
     ignorePaths: options.ignorePaths,
   });
 
@@ -41,7 +40,6 @@ export async function nativeFingerprint(
   );
 
   const hash = await hashSources(sources);
-
   return { hash, sources };
 }
 
