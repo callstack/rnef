@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { processExtraSources } from '../fingerprint/processExtraSources.js';
+import { processExtraSources } from '../fingerprint/extra-sources.js';
 
 describe('processExtraSources', () => {
   const mockProjectRoot = '/mock/project/root';
@@ -26,9 +26,8 @@ describe('processExtraSources', () => {
 
     expect(result).toEqual([
       {
-        type: 'contents',
-        id: path.join(mockProjectRoot, 'file.txt'),
-        contents: 'mock content',
+        type: 'file',
+        filePath: path.join(mockProjectRoot, 'file.txt'),
         reasons: ['custom-user-config'],
       },
     ]);
@@ -71,9 +70,8 @@ describe('processExtraSources', () => {
 
     expect(result).toEqual([
       {
-        type: 'contents',
-        id: path.join(mockProjectRoot, 'file.txt'),
-        contents: 'mock content',
+        type: 'file',
+        filePath: path.join(mockProjectRoot, 'file.txt'),
         reasons: ['custom-user-config'],
       },
       {
@@ -91,45 +89,30 @@ describe('processExtraSources', () => {
 
     expect(result).toEqual([
       {
-        type: 'contents',
-        id: absolutePath,
-        contents: 'mock content',
+        type: 'file',
+        filePath: absolutePath,
         reasons: ['custom-user-config'],
       },
     ]);
   });
-
-  it('should handle errors when reading files', async () => {
-    vi.spyOn(fs, 'readFileSync').mockImplementation(() => {
-      throw new Error('Failed to read file');
-    });
-
-    const result = processExtraSources(['file.txt'], mockProjectRoot);
-
-    expect(result).toEqual([]);
-  });
-
   it('should process glob patterns', async () => {
     const fixturesDir = path.join(__dirname, '__fixtures__', 'glob-test');
     const result = processExtraSources(['**/*.txt'], fixturesDir);
 
     expect(result).toEqual([
       {
-        type: 'contents',
-        id: path.join(fixturesDir, 'test1.txt'),
-        contents: 'mock content',
+        type: 'file',
+        filePath: path.join(fixturesDir, 'test1.txt'),
         reasons: ['custom-user-config'],
       },
       {
-        type: 'contents',
-        id: path.join(fixturesDir, 'test2.txt'),
-        contents: 'mock content',
+        type: 'file',
+        filePath: path.join(fixturesDir, 'test2.txt'),
         reasons: ['custom-user-config'],
       },
       {
-        type: 'contents',
-        id: path.join(fixturesDir, 'subdir', 'test3.txt'),
-        contents: 'mock content',
+        type: 'file',
+        filePath: path.join(fixturesDir, 'subdir', 'test3.txt'),
         reasons: ['custom-user-config'],
       },
     ]);
@@ -143,15 +126,13 @@ describe('processExtraSources', () => {
 
     expect(result).toEqual([
       {
-        type: 'contents',
-        id: path.join(fixturesDir, 'test1.txt'),
-        contents: 'mock content',
+        type: 'file',
+        filePath: path.join(fixturesDir, 'test1.txt'),
         reasons: ['custom-user-config'],
       },
       {
-        type: 'contents',
-        id: path.join(fixturesDir, 'subdir', 'test3.txt'),
-        contents: 'mock content',
+        type: 'file',
+        filePath: path.join(fixturesDir, 'subdir', 'test3.txt'),
         reasons: ['custom-user-config'],
       },
     ]);
@@ -165,15 +146,13 @@ describe('processExtraSources', () => {
 
     expect(result).toEqual([
       {
-        type: 'contents',
-        id: path.join(fixturesDir, 'test1.txt'),
-        contents: 'mock content',
+        type: 'file',
+        filePath: path.join(fixturesDir, 'test1.txt'),
         reasons: ['custom-user-config'],
       },
       {
-        type: 'contents',
-        id: path.join(fixturesDir, 'test2.txt'),
-        contents: 'mock content',
+        type: 'file',
+        filePath: path.join(fixturesDir, 'test2.txt'),
         reasons: ['custom-user-config'],
       },
     ]);
@@ -192,9 +171,8 @@ describe('processExtraSources', () => {
 
     expect(result).toEqual([
       {
-        type: 'contents',
-        id: path.join(mockProjectRoot, 'file.txt'),
-        contents: 'mock content',
+        type: 'file',
+        filePath: path.join(mockProjectRoot, 'file.txt'),
         reasons: ['custom-user-config'],
       },
     ]);

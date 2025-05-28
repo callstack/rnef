@@ -19,3 +19,5 @@ export {
   fetchCachedBuild,
   handleDownloadResponse,
 } from './lib/build-cache/fetchCachedBuild.js';
+
+export type * from './lib/fingerprint/types.js';

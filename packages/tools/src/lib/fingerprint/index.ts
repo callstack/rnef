@@ -2,24 +2,15 @@ import crypto from 'node:crypto';
 import type { FingerprintSource } from '@expo/fingerprint';
 import { createFingerprintAsync } from '@expo/fingerprint';
 import { RnefError } from '../error.js';
-import { processExtraSources } from './processExtraSources.js';
+import { processExtraSources } from './extra-sources.js';
+import { buildPlatformSources } from './platform-sources.js';
+import type { FingerprintOptions, FingerprintResult } from './types.js';
 
 const HASH_ALGORITHM = 'sha1';
 const EXCLUDED_SOURCES = [
   'expoAutolinkingConfig:ios',
   'expoAutolinkingConfig:android',
 ];
-
-export type FingerprintOptions = {
-  platform: 'ios' | 'android';
-  extraSources: string[];
-  ignorePaths: string[];
-};
-
-export type FingerprintResult = {
-  hash: string;
-  sources: FingerprintSource[];
-};
 
 /**
  * Calculates the fingerprint of the native parts project of the project.
@@ -28,26 +19,18 @@ export async function nativeFingerprint(
   path: string,
   options: FingerprintOptions
 ): Promise<FingerprintResult> {
-  const platform = options.platform;
+  const platformSources = buildPlatformSources(options.platformConfig);
+  const extraSources = processExtraSources(
+    options.extraSources,
+    path,
+    options.ignorePaths
+  );
 
   const fingerprint = await createFingerprintAsync(path, {
-    platforms: [platform],
-    dirExcludes: [
-      'android/build',
-      'android/**/build',
-      'android/**/.cxx',
-      'ios/DerivedData',
-      'ios/Pods',
-      'node_modules',
-      'android/local.properties',
-      'android/.idea',
-      'android/.gradle',
-    ],
-    extraSources: processExtraSources(
-      options.extraSources,
-      path,
-      options.ignorePaths
-    ),
+    // Disable expo fingerprint built-in platform sources
+    platforms: [],
+    extraSources: [...platformSources.sources, ...extraSources],
+    dirExcludes: ['node_modules', ...platformSources.dirExcludes],
     ignorePaths: options.ignorePaths,
   });
 
@@ -57,7 +40,6 @@ export async function nativeFingerprint(
   );
 
   const hash = await hashSources(sources);
-
   return { hash, sources };
 }
 
