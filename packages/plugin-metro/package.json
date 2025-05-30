@@ -1,6 +1,6 @@
 {
   "name": "@rnef/plugin-metro",
-  "version": "0.7.14",
+  "version": "0.7.15",
   "type": "module",
   "exports": {
     "types": "./dist/src/index.d.ts",
@@ -17,7 +17,7 @@
   "dependencies": {
     "@react-native-community/cli-server-api": "^18.0.0",
     "@react-native/dev-middleware": "^0.79.1",
-    "@rnef/tools": "^0.7.14",
+    "@rnef/tools": "^0.7.15",
     "metro": "^0.82.1",
     "metro-config": "^0.82.1",
     "metro-core": "^0.82.1",
@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "@react-native/community-cli-plugin": "0.79.1",
-    "@rnef/config": "^0.7.14"
+    "@rnef/config": "^0.7.15"
   },
   "peerDependencies": {
     "@react-native/community-cli-plugin": "*"

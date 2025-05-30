@@ -1,6 +1,6 @@
 {
   "name": "@rnef/provider-github",
-  "version": "0.7.14",
+  "version": "0.7.15",
   "type": "module",
   "exports": {
     "types": "./dist/src/index.d.ts",
@@ -14,7 +14,7 @@
     "publish:verdaccio": "npm publish --registry http://localhost:4873 --userconfig ../../.npmrc"
   },
   "dependencies": {
-    "@rnef/tools": "^0.7.14",
+    "@rnef/tools": "^0.7.15",
     "ts-regex-builder": "^1.8.2",
     "tslib": "^2.3.0"
   },

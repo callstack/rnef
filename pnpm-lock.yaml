@@ -115,10 +115,10 @@ importers:
         specifier: ^18.0.0
         version: 18.0.0(typescript@5.6.3)
       '@rnef/config':
-        specifier: ^0.7.14
+        specifier: ^0.7.15
         version: link:../config
       '@rnef/tools':
-        specifier: ^0.7.14
+        specifier: ^0.7.15
         version: link:../tools
       adm-zip:
         specifier: ^0.5.16
@@ -146,10 +146,10 @@ importers:
         specifier: ^7.26.2
         version: 7.26.2
       '@rnef/provider-github':
-        specifier: ^0.7.14
+        specifier: ^0.7.15
         version: link:../provider-github
       '@rnef/tools':
-        specifier: ^0.7.14
+        specifier: ^0.7.15
         version: link:../tools
       joi:
         specifier: ^17.13.3
@@ -165,7 +165,7 @@ importers:
   packages/create-app:
     dependencies:
       '@rnef/tools':
-        specifier: ^0.7.14
+        specifier: ^0.7.15
         version: link:../tools
       gradient-string:
         specifier: ^3.0.0
@@ -184,7 +184,7 @@ importers:
         version: 2.8.1
     devDependencies:
       '@rnef/test-helpers':
-        specifier: ^0.7.14
+        specifier: ^0.7.15
         version: link:../test-helpers
       '@types/gradient-string':
         specifier: ^1.1.6
@@ -199,7 +199,7 @@ importers:
         specifier: ^18.0.0
         version: 18.0.0
       '@rnef/tools':
-        specifier: ^0.7.14
+        specifier: ^0.7.15
         version: link:../tools
       adm-zip:
         specifier: ^0.5.16
@@ -212,7 +212,7 @@ importers:
         specifier: ^18.0.0
         version: 18.0.0
       '@rnef/config':
-        specifier: ^0.7.14
+        specifier: ^0.7.15
         version: link:../config
       '@types/adm-zip':
         specifier: ^0.5.7
@@ -227,7 +227,7 @@ importers:
         specifier: ^18.0.0
         version: 18.0.0
       '@rnef/tools':
-        specifier: ^0.7.14
+        specifier: ^0.7.15
         version: link:../tools
       '@types/adm-zip':
         specifier: ^0.5.7
@@ -249,7 +249,7 @@ importers:
         specifier: ^18.0.0
         version: 18.0.0
       '@rnef/config':
-        specifier: ^0.7.14
+        specifier: ^0.7.15
         version: link:../config
 
   packages/platform-ios:
@@ -261,17 +261,17 @@ importers:
         specifier: ^18.0.0
         version: 18.0.0
       '@rnef/platform-apple-helpers':
-        specifier: ^0.7.14
+        specifier: ^0.7.15
         version: link:../platform-apple-helpers
       '@rnef/tools':
-        specifier: ^0.7.14
+        specifier: ^0.7.15
         version: link:../tools
       tslib:
         specifier: ^2.3.0
         version: 2.8.1
     devDependencies:
       '@rnef/config':
-        specifier: ^0.7.14
+        specifier: ^0.7.15
         version: link:../config
 
   packages/plugin-brownfield-android:
@@ -280,10 +280,10 @@ importers:
         specifier: ^18.0.0
         version: 18.0.0
       '@rnef/platform-android':
-        specifier: ^0.7.14
+        specifier: ^0.7.15
         version: link:../platform-android
       '@rnef/tools':
-        specifier: ^0.7.14
+        specifier: ^0.7.15
         version: link:../tools
       tslib:
         specifier: ^2.3.0
@@ -293,7 +293,7 @@ importers:
         specifier: ^18.0.0
         version: 18.0.0
       '@rnef/config':
-        specifier: ^0.7.14
+        specifier: ^0.7.15
         version: link:../config
 
   packages/plugin-brownfield-ios:
@@ -305,17 +305,17 @@ importers:
         specifier: ^18.0.0
         version: 18.0.0
       '@rnef/platform-apple-helpers':
-        specifier: ^0.7.14
+        specifier: ^0.7.15
         version: link:../platform-apple-helpers
       '@rnef/tools':
-        specifier: ^0.7.14
+        specifier: ^0.7.15
         version: link:../tools
       tslib:
         specifier: ^2.3.0
         version: 2.8.1
     devDependencies:
       '@rnef/config':
-        specifier: ^0.7.14
+        specifier: ^0.7.15
         version: link:../config
 
   packages/plugin-metro:
@@ -327,7 +327,7 @@ importers:
         specifier: ^0.79.1
         version: 0.79.1
       '@rnef/tools':
-        specifier: ^0.7.14
+        specifier: ^0.7.15
         version: link:../tools
       metro:
         specifier: ^0.82.1
@@ -349,7 +349,7 @@ importers:
         specifier: 0.79.1
         version: 0.79.1
       '@rnef/config':
-        specifier: ^0.7.14
+        specifier: ^0.7.15
         version: link:../config
 
   packages/plugin-repack:
@@ -358,7 +358,7 @@ importers:
         specifier: ^5.0.3
         version: 5.0.3(@babel/core@7.25.2)(@rspack/core@1.3.10(@swc/helpers@0.5.17))(react-native@0.76.3(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))(@react-native-community/cli-server-api@18.0.0)(react@19.1.0))(webpack@5.96.1(@swc/core@1.5.29(@swc/helpers@0.5.17)))
       '@rnef/tools':
-        specifier: ^0.7.14
+        specifier: ^0.7.15
         version: link:../tools
       '@rspack/core':
         specifier: ^1.2.8
@@ -371,13 +371,13 @@ importers:
         version: 2.8.1
     devDependencies:
       '@rnef/config':
-        specifier: ^0.7.14
+        specifier: ^0.7.15
         version: link:../config
 
   packages/provider-github:
     dependencies:
       '@rnef/tools':
-        specifier: ^0.7.14
+        specifier: ^0.7.15
         version: link:../tools
       ts-regex-builder:
         specifier: ^1.8.2
@@ -392,7 +392,7 @@ importers:
         specifier: ^3.816.0
         version: 3.816.0
       '@rnef/tools':
-        specifier: ^0.7.12
+        specifier: ^0.7.15
         version: link:../tools
       tslib:
         specifier: ^2.3.0

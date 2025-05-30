@@ -1,5 +1,11 @@
 # rnef-docs
 
+## 1.0.6
+
+### Patch Changes
+
+- a15beb8: Add update scripts step to RNC CLI migration guide
+
 ## 1.0.5
 
 ### Patch Changes
