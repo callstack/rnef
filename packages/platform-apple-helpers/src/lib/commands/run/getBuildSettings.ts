@@ -27,7 +27,9 @@ export async function getBuildSettings(
       scheme,
       '-configuration',
       configuration,
-      ...destinations.flatMap((destination) => ['-destination', destination]),
+      // -showBuildSettings fails when multiple destinations are passed
+      '-destination',
+      destinations[0],
       '-showBuildSettings',
       '-json',
     ],
