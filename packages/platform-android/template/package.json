@@ -4,6 +4,6 @@
     "android": "rnef run:android"
   },
   "devDependencies": {
-    "@rnef/platform-android": "^0.7.14"
+    "@rnef/platform-android": "^0.7.15"
   }
 }

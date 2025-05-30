@@ -1,5 +1,12 @@
 # @rnef/provider-github
 
+## 0.7.15
+
+### Patch Changes
+
+- Updated dependencies [6d057cc]
+  - @rnef/tools@0.7.15
+
 ## 0.7.14
 
 ### Patch Changes

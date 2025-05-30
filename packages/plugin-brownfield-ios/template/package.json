@@ -4,6 +4,6 @@
     "package:ios": "rnef package:ios --scheme HelloWorldReact --mode Release"
   },
   "devDependencies": {
-    "@rnef/plugin-brownfield-ios": "^0.7.14"
+    "@rnef/plugin-brownfield-ios": "^0.7.15"
   }
 }
