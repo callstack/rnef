@@ -5,9 +5,9 @@ import { getBuildOptions } from '../build/buildOptions.js';
 export interface RunFlags extends BuildFlags {
   binaryPath?: string;
   port: string;
-  remoteCache?: boolean;
   device?: string;
   catalyst?: boolean;
+  local?: boolean;
 }
 
 export const getRunOptions = ({ platformName }: BuilderCommand) => {
@@ -22,8 +22,8 @@ export const getRunOptions = ({ platformName }: BuilderCommand) => {
         'Path relative to project root where pre-built .app binary lives.',
     },
     {
-      name: '--no-remote-cache',
-      description: 'Do not use remote build caching.',
+      name: '--local',
+      description: 'Force local build with xcodebuild.',
     },
     {
       name: '--device <string>',

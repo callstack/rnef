@@ -24,6 +24,11 @@ const androidProject: AndroidProjectConfig = {
   assets: [],
 };
 
+const fingerprintOptions = {
+  extraSources: [],
+  ignorePaths: [],
+};
+
 const spinnerMock = vi.hoisted(() => ({
   start: vi.fn(),
   stop: vi.fn(),
@@ -64,7 +69,12 @@ test('buildAndroid runs gradle build with correct configuration for debug and ou
     return (actualFs as typeof fs).existsSync(file);
   });
 
-  await buildAndroid(androidProject, { ...args, aab: true });
+  await buildAndroid(
+    androidProject,
+    { ...args, aab: true },
+    '/root',
+    fingerprintOptions
+  );
 
   expect(spawn).toBeCalledWith('./gradlew', ['app:bundleDebug', '-x', 'lint'], {
     cwd: '/android',
@@ -80,7 +90,7 @@ test('buildAndroid fails gracefully when gradle errors', async () => {
   vi.mocked(spawn).mockRejectedValueOnce({ stderr: 'gradle error' });
 
   await expect(
-    buildAndroid(androidProject, args)
+    buildAndroid(androidProject, args, '/root', fingerprintOptions)
   ).rejects.toThrowErrorMatchingInlineSnapshot(
     `[RnefError: Failed to build the app. See the error above for details from Gradle.]`
   );

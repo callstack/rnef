@@ -16,7 +16,12 @@ export function registerBuildCommand(
         api.getProjectRoot(),
         pluginConfig
       );
-      await buildAndroid(androidConfig, args as BuildFlags);
+      await buildAndroid(
+        androidConfig,
+        args as BuildFlags,
+        api.getProjectRoot(),
+        api.getFingerprintOptions()
+      );
     },
     options: options,
   });

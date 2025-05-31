@@ -34,6 +34,7 @@ export const platformIOS =
           args: args as BuildFlags,
           projectRoot,
           reactNativePath: api.getReactNativePath(),
+          fingerprintOptions: api.getFingerprintOptions(),
         });
         outro('Success 🎉.');
       },

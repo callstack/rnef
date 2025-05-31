@@ -56,6 +56,7 @@ export const pluginBrownfieldIos =
           args: { ...args, scheme, destination, buildFolder },
           projectRoot,
           reactNativePath: api.getReactNativePath(),
+          fingerprintOptions: api.getFingerprintOptions(),
         });
 
         await mergeFrameworks({

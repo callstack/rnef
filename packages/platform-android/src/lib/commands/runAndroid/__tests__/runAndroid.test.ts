@@ -18,7 +18,7 @@ const args: Flags = {
   appIdSuffix: '',
   mainActivity: undefined,
   port: '8081',
-  remoteCache: false,
+  local: true,
 };
 const androidProject: AndroidProjectConfig = {
   appName: 'app',

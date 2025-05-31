@@ -49,7 +49,7 @@ describe('--appFolder', () => {
     mainActivity: 'MainActivity',
     port: '8081',
     activeArchOnly: false,
-    remoteCache: false,
+    local: true,
   };
   const androidProject: AndroidProjectConfig = {
     appName: 'app',
@@ -69,6 +69,7 @@ describe('--appFolder', () => {
       tasks: ['installDebug'],
       args: { ...args },
       androidProject,
+      artifactName: 'rnef-android-debug-123456abcdef',
     });
     expect((spawn as Mock).mock.calls[0][1]).toContain('app:installDebug');
   });
@@ -78,6 +79,7 @@ describe('--appFolder', () => {
       tasks: ['installDebug'],
       args: { ...args },
       androidProject: { ...androidProject, appName: 'someApp' },
+      artifactName: 'rnef-android-debug-123456abcdef',
     });
 
     expect((spawn as Mock).mock.calls[0][1]).toContain('someApp:installDebug');
@@ -88,6 +90,7 @@ describe('--appFolder', () => {
       tasks: ['installRelease'],
       args: { ...args },
       androidProject: { ...androidProject, appName: 'anotherApp' },
+      artifactName: 'rnef-android-release-123456abcdef',
     });
 
     expect((spawn as Mock).mock.calls[0][1]).toContain(
@@ -100,6 +103,7 @@ describe('--appFolder', () => {
       tasks: ['installDebug', 'someTask'],
       args: { ...args },
       androidProject,
+      artifactName: 'rnef-android-debug-123456abcdef',
     });
 
     expect((spawn as Mock).mock.calls[0][1]).toContain('app:someTask');
@@ -110,6 +114,7 @@ describe('--appFolder', () => {
       tasks: ['someTask', 'installDebug'],
       args: { ...args },
       androidProject: { ...androidProject, appName: 'anotherApp' },
+      artifactName: 'rnef-android-debug-123456abcdef',
     });
 
     expect((spawn as Mock).mock.calls[0][1]).toContain('anotherApp:someTask');
@@ -120,6 +125,7 @@ describe('--appFolder', () => {
       tasks: ['clean', 'someTask'],
       args: { ...args },
       androidProject,
+      artifactName: 'rnef-android-debug-123456abcdef',
     });
 
     expect((spawn as Mock).mock.calls[0][1]).toEqual([

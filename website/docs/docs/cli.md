@@ -142,15 +142,23 @@ The `build:ios` command builds your iOS app for simulators, devices, or distribu
 
 ### `rnef run:ios` Options
 
-The `run:ios` command runs your iOS app on a simulator or device. It extends the functionality of `build:ios` with additional runtime options.
+The `run:ios` command runs your iOS app on a simulator or device. It follows this build strategy:
+
+1. Use the provided binary if specified with `--binary-path`
+1. Build locally if `--local` flag is set
+1. Otherwise, try to use a cached build from cache (in `.rnef` folder)
+
+The build cache is populated either by a local build or when downloaded frome remote storage with [`remoteCacheProvider`](./configuration.md#remote-cache-configuration).
+
+`run:ios` extends the functionality of `build:ios` with additional runtime options.
 
 | Option                   | Description                               |
 | :----------------------- | :---------------------------------------- |
 | `--port <number>`        | Bundler port (default: 8081)              |
 | `--binary-path <string>` | Path to pre-built .app binary             |
-| `--no-remote-cache`      | Disable remote build caching              |
 | `--device <string>`      | Device/simulator to use (by name or UDID) |
 | `--catalyst`             | Run on Mac Catalyst                       |
+| `--local`                | Force local build with xcodebuild         |
 
 ### `rnef sign:ios` Options
 
@@ -166,7 +174,13 @@ The `sign:ios` command signs your iOS app with certificates and provisioning pro
 
 ### `rnef build:android` Options
 
-The `build:android` command builds your Android app for emulators, devices, or distribution, producing either APK or AAB files.
+The `build:android` command builds your Android app for emulators, devices, or distribution, producing either APK or AAB files. It follows this build strategy:
+
+1. Use the provided binary if specified with `--binary-path`
+1. Build locally if `--local` flag is set
+1. Otherwise, try to use a cached build from cache (in `.rnef` folder)
+
+The build cache is populated either by a local build or when downloaded frome remote storage with [`remoteCacheProvider`](./configuration.md#remote-cache-configuration).
 
 | Option                   | Description                             |
 | :----------------------- | :-------------------------------------- |
@@ -182,12 +196,12 @@ The `run:android` command runs your Android app on an emulator or device. It ext
 
 Same as for `build:android` and:
 
-| Option                     | Description                  |
-| :------------------------- | :--------------------------- |
-| `--app-id <string>`        | Application ID               |
-| `--app-id-suffix <string>` | Application ID suffix        |
-| `--no-remote-cache`        | Disable remote build caching |
-| `--binary-path <string>`   | Path to pre-built APK        |
+| Option                     | Description                           |
+| :------------------------- | :------------------------------------ |
+| `--app-id <string>`        | Application ID                        |
+| `--app-id-suffix <string>` | Application ID suffix                 |
+| `--binary-path <string>`   | Path to pre-built APK                 |
+| `--local`                  | Force local build with Gradle wrapper |
 
 ### `rnef sign:android` Options
 

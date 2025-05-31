@@ -5,7 +5,6 @@ import * as tar from 'tar';
 import { color } from '../color.js';
 import { RnefError } from '../error.js';
 import logger from '../logger.js';
-import { getProjectRoot } from '../project.js';
 import { spinner } from '../prompts.js';
 import {
   getLocalArtifactPath,
@@ -13,7 +12,6 @@ import {
   type RemoteBuildCache,
 } from './common.js';
 import type { LocalBuild } from './localBuildCache.js';
-import { queryLocalBuildCache } from './localBuildCache.js';
 
 export type Distribution = 'simulator' | 'device';
 
@@ -25,9 +23,9 @@ type FetchCachedBuildOptions = {
 export async function fetchCachedBuild({
   artifactName,
   remoteCacheProvider,
-}: FetchCachedBuildOptions): Promise<LocalBuild | null> {
+}: FetchCachedBuildOptions): Promise<LocalBuild | undefined> {
   if (remoteCacheProvider === null) {
-    return null;
+    return undefined;
   }
   if (remoteCacheProvider === undefined) {
     logger.warn(`No remote cache provider set. You won't be able to access reusable builds from e.g. GitHub Actions. 
@@ -45,28 +43,11 @@ To disable this warning, set the provider to null:
 {
   remoteCacheProvider: null
 }`);
-    return null;
+    return undefined;
   }
   const loader = spinner();
-  loader.start('Looking for a local cached build');
-
-  const root = getProjectRoot();
-
-  const localBuild = queryLocalBuildCache(artifactName);
-  if (localBuild != null) {
-    loader.stop(`Found local cached build: ${color.cyan(localBuild.name)}`);
-    return localBuild;
-  }
-
-  if (!remoteCacheProvider) {
-    loader.stop(`No remote cache provider found, skipping.`);
-    return null;
-  }
-  const remoteBuildCache = remoteCacheProvider();
-
-  loader.stop(`No local build cached. Checking ${remoteBuildCache.name}.`);
-
   const localArtifactPath = getLocalArtifactPath(artifactName);
+  const remoteBuildCache = remoteCacheProvider();
   const response = await remoteBuildCache.download({ artifactName });
   loader.start(`Downloading cached build from ${remoteBuildCache.name}`);
   await handleDownloadResponse(
@@ -79,11 +60,9 @@ To disable this warning, set the provider to null:
   const binaryPath = getLocalBinaryPath(localArtifactPath);
   if (!binaryPath) {
     loader.stop(`No binary found for "${artifactName}".`);
-    return null;
+    return undefined;
   }
-  loader.stop(
-    `Downloaded cached build: ${color.cyan(path.relative(root, binaryPath))}.`
-  );
+  loader.stop(`Downloaded cached build: ${color.cyan(binaryPath)}`);
 
   return {
     name: artifactName,

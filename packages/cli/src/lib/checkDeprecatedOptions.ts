@@ -69,11 +69,13 @@ const deprecatedAndroidFlags = [
   { old: '--mode', new: '--variant' },
   { old: '--appId', new: '--app-id' },
   { old: '--appIdSuffix', new: '--app-id-suffix' },
+  { old: '--no-remote-cache', new: '--local' },
 ];
 
 const deprecatedIosFlags = [
   { old: '--mode', new: '--configuration' },
   { old: '--buildFolder', new: '--build-folder' },
+  { old: '--no-remote-cache', new: '--local' },
 ];
 
 export const checkDeprecatedOptions = (argv: string[]) => {

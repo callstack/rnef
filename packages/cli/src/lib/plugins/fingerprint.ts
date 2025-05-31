@@ -1,5 +1,6 @@
 import { performance } from 'node:perf_hooks';
 import type { PluginApi } from '@rnef/config';
+import type { FingerprintSources } from '@rnef/tools';
 import {
   intro,
   isInteractive,
@@ -15,14 +16,9 @@ type NativeFingerprintCommandOptions = {
   raw?: boolean;
 };
 
-type ConfigFingerprintOptions = {
-  extraSources: string[];
-  ignorePaths: string[];
-};
-
 export async function nativeFingerprintCommand(
   path = '.',
-  { extraSources, ignorePaths }: ConfigFingerprintOptions,
+  { extraSources, ignorePaths }: FingerprintSources,
   options: NativeFingerprintCommandOptions
 ) {
   validateOptions(options);

@@ -4,10 +4,11 @@ import type {
   AndroidProjectConfig,
   Config,
 } from '@react-native-community/cli-types';
-import type { RemoteBuildCache } from '@rnef/tools';
+import type { FingerprintSources, RemoteBuildCache } from '@rnef/tools';
 import {
   fetchCachedBuild,
   formatArtifactName,
+  getLocalBuildCacheBinaryPath,
   intro,
   isInteractive,
   logger,
@@ -35,7 +36,7 @@ export interface Flags extends BuildFlags {
   device?: string;
   binaryPath?: string;
   user?: string;
-  remoteCache: boolean;
+  local?: boolean;
 }
 
 export type AndroidProject = NonNullable<Config['project']['android']>;
@@ -48,7 +49,7 @@ export async function runAndroid(
   args: Flags,
   projectRoot: string,
   remoteCacheProvider: null | (() => RemoteBuildCache) | undefined,
-  fingerprintOptions: { extraSources: string[]; ignorePaths: string[] }
+  fingerprintOptions: FingerprintSources
 ) {
   intro('Running Android app');
 
@@ -60,21 +61,29 @@ export async function runAndroid(
   const mainTaskType = device ? 'assemble' : 'install';
   const tasks = args.tasks ?? [`${mainTaskType}${toPascalCase(args.variant)}`];
 
-  if (!args.binaryPath && args.remoteCache) {
-    const artifactName = await formatArtifactName({
-      platform: 'android',
-      traits: [args.variant],
-      root: projectRoot,
-      fingerprintOptions,
-    });
+  const artifactName = await formatArtifactName({
+    platform: 'android',
+    traits: [args.variant],
+    root: projectRoot,
+    fingerprintOptions,
+  });
+  // 1. First check if the binary path is provided
+  let binaryPath = args.binaryPath;
+
+  // 2. If not, check if the local build is requested
+  if (!binaryPath && !args.local) {
+    binaryPath = getLocalBuildCacheBinaryPath(artifactName);
+  }
+
+  // 3. If not, check if the remote cache is requested
+  if (!binaryPath && !args.local) {
     try {
       const cachedBuild = await fetchCachedBuild({
         artifactName,
         remoteCacheProvider,
       });
       if (cachedBuild) {
-        // @todo replace with a more generic way to pass binary path
-        args.binaryPath = cachedBuild.binaryPath;
+        binaryPath = cachedBuild.binaryPath;
       }
     } catch (error) {
       logger.warn((error as RnefError).message);
@@ -84,7 +93,7 @@ export async function runAndroid(
         cancelLabel: 'No',
       });
       if (!shouldContinueWithLocalBuild) {
-        return;
+        throw new RnefError('Cancelled run');
       }
     }
   }
@@ -95,8 +104,16 @@ export async function runAndroid(
       device.deviceId = await tryLaunchEmulator(device.readableName);
     }
     if (device.deviceId) {
-      await runGradle({ tasks, androidProject, args });
-      await tryInstallAppOnDevice(device, androidProject, args, tasks);
+      if (!binaryPath) {
+        await runGradle({ tasks, androidProject, args, artifactName });
+      }
+      await tryInstallAppOnDevice(
+        device,
+        androidProject,
+        args,
+        tasks,
+        binaryPath
+      );
       await tryLaunchAppOnDevice(device, androidProject, args);
     }
   } else {
@@ -111,15 +128,22 @@ export async function runAndroid(
       }
     }
 
-    await runGradle({ tasks, androidProject, args });
+    if (!binaryPath) {
+      await runGradle({ tasks, androidProject, args, artifactName });
+    }
 
     for (const device of await listAndroidDevices()) {
-      if (args.binaryPath) {
-        await tryInstallAppOnDevice(device, androidProject, args, tasks);
-      }
+      await tryInstallAppOnDevice(
+        device,
+        androidProject,
+        args,
+        tasks,
+        binaryPath
+      );
       await tryLaunchAppOnDevice(device, androidProject, args);
     }
   }
+
   outro('Success 🎉.');
 }
 
@@ -254,7 +278,7 @@ export const runOptions = [
     description: 'Id of the User Profile you want to install the app on.',
   },
   {
-    name: '--no-remote-cache',
-    description: 'Do not use remote build cacheing.',
+    name: '--local',
+    description: 'Force local build with Gradle wrapper.',
   },
 ];

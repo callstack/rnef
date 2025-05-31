@@ -1,10 +1,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import type { RemoteBuildCache } from '@rnef/tools';
+import type { FingerprintSources, RemoteBuildCache } from '@rnef/tools';
 import {
   color,
   fetchCachedBuild,
   formatArtifactName,
+  getLocalBuildCacheBinaryPath,
   isInteractive,
   logger,
   promptConfirm,
@@ -43,27 +44,36 @@ export const createRun = async ({
   args: RunFlags;
   projectRoot: string;
   remoteCacheProvider: null | (() => RemoteBuildCache) | undefined;
-  fingerprintOptions: { extraSources: string[]; ignorePaths: string[] };
+  fingerprintOptions: FingerprintSources;
   reactNativePath: string;
 }) => {
-  if (!args.binaryPath && args.remoteCache) {
-    const artifactName = await formatArtifactName({
-      platform: 'ios',
-      traits: [
-        args.destination?.[0] ?? 'simulator',
-        args.configuration ?? 'Debug',
-      ],
-      root: projectRoot,
-      fingerprintOptions,
-    });
+  validateArgs(args, projectRoot);
+  const artifactName = await formatArtifactName({
+    platform: 'ios',
+    traits: [
+      args.destination?.[0] ?? 'simulator',
+      args.configuration ?? 'Debug',
+    ],
+    root: projectRoot,
+    fingerprintOptions,
+  });
+  // 1. First check if the binary path is provided
+  let binaryPath = args.binaryPath;
+
+  // 2. If not, check if the local build is requested
+  if (!binaryPath && !args.local) {
+    binaryPath = getLocalBuildCacheBinaryPath(artifactName);
+  }
+
+  // 3. If not, check if the remote cache is requested
+  if (!binaryPath && !args.local) {
     try {
       const cachedBuild = await fetchCachedBuild({
         artifactName,
         remoteCacheProvider,
       });
       if (cachedBuild) {
-        // @todo replace with a more generic way to pass binary path
-        args.binaryPath = cachedBuild.binaryPath;
+        binaryPath = cachedBuild.binaryPath;
       }
     } catch (error) {
       logger.warn((error as RnefError).message);
@@ -73,12 +83,10 @@ export const createRun = async ({
         cancelLabel: 'No',
       });
       if (!shouldContinueWithLocalBuild) {
-        return;
+        throw new RnefError('Cancelled run');
       }
     }
   }
-
-  validateArgs(args, projectRoot);
 
   // Check if the device argument looks like a UDID
   // (assuming UDIDs are alphanumeric and have specific length)
@@ -101,6 +109,8 @@ export const createRun = async ({
       udid,
       deviceName,
       reactNativePath,
+      artifactName,
+      binaryPath,
     });
     await runOnMac(appPath);
     return;
@@ -116,6 +126,8 @@ export const createRun = async ({
       udid,
       deviceName,
       reactNativePath,
+      artifactName,
+      binaryPath,
     });
     if (scheme) {
       await runOnMacCatalyst(appPath, scheme);
@@ -152,6 +164,8 @@ export const createRun = async ({
           udid: device.udid,
           projectRoot,
           reactNativePath,
+          artifactName,
+          binaryPath,
         }),
       ]);
 
@@ -167,6 +181,8 @@ export const createRun = async ({
         udid: device.udid,
         projectRoot,
         reactNativePath,
+        artifactName,
+        binaryPath,
       });
       await runOnDevice(device, appPath, projectConfig.sourceDir);
     }
@@ -210,6 +226,8 @@ export const createRun = async ({
           udid: simulator.udid,
           projectRoot,
           reactNativePath,
+          artifactName,
+          binaryPath,
         }),
       ]);
       await runOnSimulator(simulator, appPath, infoPlistPath);

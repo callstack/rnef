@@ -1,5 +1,13 @@
 import type { AndroidProjectConfig } from '@react-native-community/cli-types';
-import { color, logger, outro, parseArgs, spinner } from '@rnef/tools';
+import type { FingerprintSources } from '@rnef/tools';
+import {
+  color,
+  formatArtifactName,
+  logger,
+  outro,
+  parseArgs,
+  spinner,
+} from '@rnef/tools';
 import { findOutputFile } from '../runAndroid/findOutputFile.js';
 import { runGradle } from '../runGradle.js';
 import { toPascalCase } from '../toPascalCase.js';
@@ -14,14 +22,21 @@ export interface BuildFlags {
 
 export async function buildAndroid(
   androidProject: AndroidProjectConfig,
-  args: BuildFlags
+  args: BuildFlags,
+  projectRoot: string,
+  fingerprintOptions: FingerprintSources
 ) {
   normalizeArgs(args);
   // Use assemble task by default, but bundle if the flag is set
   const buildTaskBase = args.aab ? 'bundle' : 'assemble';
   const tasks = args.tasks ?? [`${buildTaskBase}${toPascalCase(args.variant)}`];
-
-  await runGradle({ tasks, androidProject, args });
+  const artifactName = await formatArtifactName({
+    platform: 'android',
+    traits: [args.variant],
+    root: projectRoot,
+    fingerprintOptions,
+  });
+  await runGradle({ tasks, androidProject, args, artifactName });
 
   const outputFilePath = await findOutputFile(androidProject, tasks);
 

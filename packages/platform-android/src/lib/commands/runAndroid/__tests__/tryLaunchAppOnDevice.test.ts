@@ -37,7 +37,7 @@ const args: Flags = {
   appId: '',
   appIdSuffix: '',
   variant: 'debug',
-  remoteCache: false,
+  local: true,
 };
 
 const androidProject: AndroidProjectConfig = {
@@ -92,29 +92,23 @@ test('launches adb shell with intent to launch com.myapp.MainActivity with same 
     args
   );
 
-  expect(spawn).toHaveBeenCalledWith(
-    '/mock/android/home/platform-tools/adb',
-    [
-      ...shellStartCommand,
-      '-n',
-      'com.myapp/com.myapp.MainActivity',
-      ...actionCategoryFlags,
-    ]
-  );
+  expect(spawn).toHaveBeenCalledWith('/mock/android/home/platform-tools/adb', [
+    ...shellStartCommand,
+    '-n',
+    'com.myapp/com.myapp.MainActivity',
+    ...actionCategoryFlags,
+  ]);
 });
 
 test('launches adb shell with intent to launch com.myapp.MainActivity with different appId than packageName on a device', async () => {
   await tryLaunchAppOnDevice(device, androidProject, args);
 
-  expect(spawn).toHaveBeenCalledWith(
-    '/mock/android/home/platform-tools/adb',
-    [
-      ...shellStartCommand,
-      '-n',
-      'com.myapp.custom/com.myapp.MainActivity',
-      ...actionCategoryFlags,
-    ]
-  );
+  expect(spawn).toHaveBeenCalledWith('/mock/android/home/platform-tools/adb', [
+    ...shellStartCommand,
+    '-n',
+    'com.myapp.custom/com.myapp.MainActivity',
+    ...actionCategoryFlags,
+  ]);
 });
 
 test('launches adb shell with intent to launch fully specified activity with different appId than packageName and an app suffix on a device', async () => {
@@ -130,15 +124,12 @@ test('launches adb shell with intent to launch fully specified activity with dif
     }
   );
 
-  expect(spawn).toHaveBeenCalledWith(
-    '/mock/android/home/platform-tools/adb',
-    [
-      ...shellStartCommand,
-      '-n',
-      'com.myapp.custom.dev/com.zoontek.rnbootsplash.RNBootSplashActivity',
-      ...actionCategoryFlags,
-    ]
-  );
+  expect(spawn).toHaveBeenCalledWith('/mock/android/home/platform-tools/adb', [
+    ...shellStartCommand,
+    '-n',
+    'com.myapp.custom.dev/com.zoontek.rnbootsplash.RNBootSplashActivity',
+    ...actionCategoryFlags,
+  ]);
 });
 
 test('--appId flag overwrites applicationId setting in androidProject', async () => {
@@ -147,15 +138,12 @@ test('--appId flag overwrites applicationId setting in androidProject', async ()
     appId: 'my.app.id',
   });
 
-  expect(spawn).toHaveBeenCalledWith(
-    '/mock/android/home/platform-tools/adb',
-    [
-      ...shellStartCommand,
-      '-n',
-      'my.app.id/com.myapp.MainActivity',
-      ...actionCategoryFlags,
-    ]
-  );
+  expect(spawn).toHaveBeenCalledWith('/mock/android/home/platform-tools/adb', [
+    ...shellStartCommand,
+    '-n',
+    'my.app.id/com.myapp.MainActivity',
+    ...actionCategoryFlags,
+  ]);
 });
 
 test('appIdSuffix Staging is appended to applicationId', async () => {
@@ -164,13 +152,10 @@ test('appIdSuffix Staging is appended to applicationId', async () => {
     appIdSuffix: 'Staging',
   });
 
-  expect(spawn).toHaveBeenCalledWith(
-    '/mock/android/home/platform-tools/adb',
-    [
-      ...shellStartCommand,
-      '-n',
-      'com.myapp.custom.Staging/com.myapp.MainActivity',
-      ...actionCategoryFlags,
-    ]
-  );
+  expect(spawn).toHaveBeenCalledWith('/mock/android/home/platform-tools/adb', [
+    ...shellStartCommand,
+    '-n',
+    'com.myapp.custom.Staging/com.myapp.MainActivity',
+    ...actionCategoryFlags,
+  ]);
 });

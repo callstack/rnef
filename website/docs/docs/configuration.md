@@ -71,7 +71,7 @@ type PluginApi = {
   getReactNativeVersion: () => string;
   getReactNativePath: () => string;
   getPlatforms: () => { [platform: string]: object };
-  getRemoteCacheProvider: () => SupportedRemoteCacheProviders | undefined;
+  getRemoteCacheProvider: () => null | undefined | (() => RemoteBuildCache);
   getFingerprintOptions: () => {
     extraSources: string[];
     ignorePaths: string[];
