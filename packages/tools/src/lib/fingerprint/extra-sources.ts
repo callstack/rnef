@@ -1,8 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import type { HashSourceContents, HashSourceDir } from '@expo/fingerprint';
+import type { HashSource } from '@expo/fingerprint';
 import glob from 'fast-glob';
 import logger from '../logger.js';
+import { sourceDir, sourceFile } from './utils.js';
 
 /**
  * Processes extra source files and directories for fingerprinting.
@@ -16,7 +17,7 @@ export function processExtraSources(
   projectRoot: string,
   ignorePaths?: string[]
 ) {
-  const processedSources: Array<HashSourceDir | HashSourceContents> = [];
+  const processedSources: Array<HashSource> = [];
 
   for (const source of extraSources) {
     try {
@@ -31,18 +32,13 @@ export function processExtraSources(
           if (fs.existsSync(absolutePath)) {
             const stats = fs.statSync(absolutePath);
             if (stats.isDirectory()) {
-              processedSources.push({
-                type: 'dir',
-                filePath: absolutePath,
-                reasons: ['custom-user-config'],
-              });
+              processedSources.push(
+                sourceDir(absolutePath, 'custom-user-config')
+              );
             } else {
-              processedSources.push({
-                type: 'contents',
-                id: absolutePath,
-                contents: fs.readFileSync(absolutePath, 'utf-8'),
-                reasons: ['custom-user-config'],
-              });
+              processedSources.push(
+                sourceFile(absolutePath, 'custom-user-config')
+              );
             }
           }
         }
@@ -61,18 +57,9 @@ export function processExtraSources(
 
       const stats = fs.statSync(absolutePath);
       if (stats.isDirectory()) {
-        processedSources.push({
-          type: 'dir',
-          filePath: absolutePath,
-          reasons: ['custom-user-config'],
-        });
+        processedSources.push(sourceDir(absolutePath, 'custom-user-config'));
       } else {
-        processedSources.push({
-          type: 'contents',
-          id: absolutePath,
-          contents: fs.readFileSync(absolutePath, 'utf-8'),
-          reasons: ['custom-user-config'],
-        });
+        processedSources.push(sourceFile(absolutePath, 'custom-user-config'));
       }
     } catch (error) {
       logger.debug(`Error processing extra source "${source}": ${error}`);

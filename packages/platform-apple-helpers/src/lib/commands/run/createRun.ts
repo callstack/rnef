@@ -1,6 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import type { RemoteBuildCache } from '@rnef/tools';
+import type {
+  FingerprintIosPlatformConfig,
+  RemoteBuildCache,
+} from '@rnef/tools';
 import {
   color,
   fetchCachedBuild,
@@ -47,8 +50,13 @@ export const createRun = async ({
   reactNativePath: string;
 }) => {
   if (!args.binaryPath && args.remoteCache) {
-    const artifactName = await formatArtifactName({
+    const platformConfig: FingerprintIosPlatformConfig = {
       platform: 'ios',
+      sourceDir: projectConfig.sourceDir,
+      derrivedDataDir: 'DerivedData',
+    };
+    const artifactName = await formatArtifactName({
+      platformConfig,
       traits: [
         args.destination?.[0] ?? 'simulator',
         args.configuration ?? 'Debug',
