@@ -1,4 +1,5 @@
 import {
+  color,
   logger,
   RnefError,
   spawn,
@@ -60,11 +61,17 @@ export async function tryLaunchAppOnDevice(
   const adbPath = getAdbPath();
   logger.debug(`Running ${adbPath} ${adbArgs.join(' ')}.`);
   const loader = spinner();
-  loader.start(`Launching the app on ${device.readableName} (id: ${deviceId})`);
+  loader.start(
+    `Launching the app on ${device.readableName} ${color.dim(
+      `(id: ${deviceId})`
+    )}`
+  );
   try {
     await spawn(adbPath, adbArgs);
     loader.stop(
-      `Launched the app on ${device.readableName} (id: ${deviceId}) and listening on port ${args.port}.`
+      `Launched the app ${color.bold(
+        applicationIdWithSuffix
+      )} and listening on port ${color.bold(args.port)}.`
     );
   } catch (error) {
     loader.stop(`Failed to launch the app.`, 1);

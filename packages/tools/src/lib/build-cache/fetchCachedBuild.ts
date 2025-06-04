@@ -47,7 +47,9 @@ To disable this warning, set the provider to null:
   const localArtifactPath = getLocalArtifactPath(artifactName);
   const remoteBuildCache = remoteCacheProvider();
   const response = await remoteBuildCache.download({ artifactName });
-  loader.start(`Downloading cached build from ${remoteBuildCache.name}`);
+  loader.start(
+    `Downloading cached build from ${color.bold(remoteBuildCache.name)}`
+  );
   await handleDownloadResponse(
     response,
     localArtifactPath,
@@ -57,10 +59,14 @@ To disable this warning, set the provider to null:
   await extractArtifactTarballIfNeeded(localArtifactPath);
   const binaryPath = getLocalBinaryPath(localArtifactPath);
   if (!binaryPath) {
-    loader.stop(`No binary found for "${artifactName}".`);
+    loader.stop(`No binary found for ${color.bold(artifactName)}.`);
     return undefined;
   }
-  loader.stop(`Downloaded cached build: ${color.cyan(binaryPath)}`);
+  loader.stop(
+    `Downloaded cached build to: ${color.magenta(
+      color.underline(color.bold(path.relative(process.cwd(), localArtifactPath)))
+    )}`
+  );
 
   return {
     name: artifactName,
@@ -99,7 +105,9 @@ export async function handleDownloadResponse(
             downloadedBytes += value.length;
             const progress = ((downloadedBytes / totalBytes) * 100).toFixed(0);
             loader?.message(
-              `Downloading cached build from ${name} (${progress}% of ${totalMB} MB)`
+              `Downloading cached build from ${color.bold(
+                name
+              )} (${progress}% of ${totalMB} MB)`
             );
             controller.enqueue(value);
           }

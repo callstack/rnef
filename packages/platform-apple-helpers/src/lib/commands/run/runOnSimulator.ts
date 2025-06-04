@@ -1,6 +1,6 @@
 import path from 'node:path';
 import type { SubprocessError } from '@rnef/tools';
-import { logger, RnefError, spawn, spinner } from '@rnef/tools';
+import { color, logger, RnefError, spawn, spinner } from '@rnef/tools';
 import type { Device } from '../../types/index.js';
 import { readKeyFromPlist } from '../../utils/plist.js';
 
@@ -43,13 +43,11 @@ export async function runOnSimulator(
 ) {
   const loader = spinner();
 
-  loader.start(`Installing the app on "${device.name}"`);
+  loader.start(`Installing the app on ${color.bold(device.name)}`);
   await installAppOnSimulator(device.udid, binaryPath);
-  loader.stop(`Installed the app on "${device.name}".`);
-
-  loader.start(`Launching the app on "${device.name}"`);
+  loader.message(`Launching the app on ${color.bold(device.name)}`);
   await launchAppOnSimulator(device.udid, binaryPath, infoPlistPath);
-  loader.stop(`Launched the app on "${device.name}".`);
+  loader.stop(`Installed and launched the app on ${color.bold(device.name)}.`);
 }
 
 async function bootSimulator(selectedSimulator: Device) {

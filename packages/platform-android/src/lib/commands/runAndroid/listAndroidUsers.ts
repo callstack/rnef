@@ -14,13 +14,13 @@ export async function checkUsers(device: string): Promise<User[]> {
   const adbPath = getAdbPath();
   const adbArgs = ['-s', device, 'shell', 'pm', 'list', 'users'];
   const loader = spinner();
-  loader.start(`Checking users on "${device}"`);
+  loader.start(`Checking users on the device`);
 
   try {
     const { stdout, stderr } = await spawn(adbPath, adbArgs, { stdio: 'pipe' });
 
     if (stderr) {
-      loader.stop(`Failed to check users of "${device}". ${stderr}`, 1);
+      loader.stop(`Failed to check users on the device. ${stderr}`, 1);
       return [];
     }
 
@@ -34,11 +34,11 @@ export async function checkUsers(device: string): Promise<User[]> {
       }
     }
 
-    loader.stop(`Found ${users.length} users on "${device}".`);
+    loader.stop(`Found ${users.length} users on the device.`);
     return users;
   } catch (error) {
     loader.stop(
-      `Unexpected error while checking users of "${device}". Continuing without user selection. Error details: ${
+      `Unexpected error while checking users on the device. Continuing without user selection. Error details: ${
         (error as { message: string }).message
       }.`,
       1

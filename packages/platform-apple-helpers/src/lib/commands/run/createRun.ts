@@ -143,14 +143,20 @@ export const createRun = async ({
       `No devices or simulators detected. Install simulators via Xcode or connect a physical ${readableName} device.`
     );
   }
-  loader.stop('Found available devices and simulators.');
+  const deviceCount = devices.filter(({ type }) => type === 'device').length;
+  const simulatorCount = devices.filter(
+    ({ type }) => type === 'simulator'
+  ).length;
+  loader.stop(`Found ${deviceCount} devices and ${simulatorCount} simulators.`);
   const device = await selectDevice(devices, args);
 
   if (device) {
     if (device.type !== deviceOrSimulator) {
       throw new RnefError(
         `Selected device "${device.name}" is not a ${deviceOrSimulator}. 
-Please select available ${deviceOrSimulator} device:
+Please either use "--destination ${
+          deviceOrSimulator === 'simulator' ? 'device' : 'simulator'
+        }" flag or select available ${deviceOrSimulator}:
 ${devices
   .filter(({ type }) => type === deviceOrSimulator)
   .map(({ name }) => `• ${name}`)

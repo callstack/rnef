@@ -1,4 +1,5 @@
 import {
+  color,
   logger,
   RnefError,
   spawn,
@@ -18,7 +19,7 @@ export async function tryInstallAppOnDevice(
   tasks: string[],
   binaryPath: string | undefined
 ) {
-  let deviceId;
+  let deviceId: string;
   if (!device.deviceId) {
     logger.debug(
       `No device with id "${device.deviceId}", skipping launching the app.`
@@ -27,6 +28,7 @@ export async function tryInstallAppOnDevice(
   } else {
     deviceId = device.deviceId;
   }
+  logger.log(`Connected to device ${color.bold(device.readableName)}`);
   let pathToApk: string;
   if (!binaryPath) {
     const outputFilePath = await findOutputFile(
@@ -56,39 +58,37 @@ export async function tryInstallAppOnDevice(
 
   const adbPath = getAdbPath();
   const loader = spinner();
-  loader.start(
-    `Installing the app on ${device.readableName} (id: ${deviceId})`
-  );
+  loader.start(`Installing the app on the device`);
   try {
-    await spawn(adbPath, adbArgs);
-    loader.stop(
-      `Installed the app on ${device.readableName} (id: ${deviceId}).`
-    );
+    await spawn(adbPath, adbArgs, { stdio: 'pipe' });
+    loader.stop(`Installed the app`);
   } catch (error) {
-    const errorMessage = (error as SubprocessError).stdout;
-    if (errorMessage.includes('INSTALL_FAILED_INSUFFICIENT_STORAGE')) {
+    loader.stop(`Failed: Installing the app`, 1);
+    const errorMessage = (error as SubprocessError).output;
+    const isInsufficientStorage = errorMessage.includes(
+      'INSTALL_FAILED_INSUFFICIENT_STORAGE'
+    );
+    const isUpdateIncompatible = errorMessage.includes(
+      'INSTALL_FAILED_UPDATE_INCOMPATIBLE'
+    );
+    if (isInsufficientStorage || isUpdateIncompatible) {
       try {
-        loader.message('Trying to install again due to insufficient storage');
-        const appId = args.appId ?? androidProject.applicationId;
+        const message = isInsufficientStorage
+          ? 'Recovery: Trying to re-install the app due to insufficient storage'
+          : 'Recovery: Trying to re-install the app due to binary incompatibility';
+        loader.start(message);
+        const appId = args.appId || androidProject.applicationId;
         await spawn(adbPath, ['-s', deviceId, 'uninstall', appId]);
         await spawn(adbPath, adbArgs);
-        loader.stop(
-          `Installed the app on ${device.readableName} (id: ${deviceId}).`
-        );
+        loader.stop(`Recovery: Re-installed the app`);
         return;
       } catch (error) {
-        loader.stop(
-          `Failed: Uninstalling and installing the app on ${device.readableName} (id: ${deviceId})`,
-          1
-        );
+        loader.stop(`Failed: Re-installing the app`, 1);
         const errorMessage = (error as SubprocessError).stdout;
         throw new RnefError(errorMessage);
       }
     }
-    loader.stop(
-      `Failed: Installing the app on ${device.readableName} (id: ${deviceId})`,
-      1
-    );
+
     throw new RnefError(errorMessage);
   }
 }

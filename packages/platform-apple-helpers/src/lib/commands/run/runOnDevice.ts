@@ -1,5 +1,5 @@
 import type { SubprocessError } from '@rnef/tools';
-import { spawn, spinner } from '@rnef/tools';
+import { color, RnefError, spawn, spinner } from '@rnef/tools';
 import type { Device } from '../../types/index.js';
 
 export async function runOnDevice(
@@ -17,19 +17,20 @@ export async function runOnDevice(
     binaryPath,
   ];
   const loader = spinner();
-  loader.start(`Installing and launching your app on ${selectedDevice.name}`);
-
+  loader.start(
+    `Installing and launching your app on ${color.bold(selectedDevice.name)}`
+  );
   try {
     await spawn('xcrun', deviceCtlArgs, { cwd: sourceDir });
   } catch (error) {
     loader.stop(
-      `Installing and launching your app on ${selectedDevice.name} [stopped]`
+      `Failed: Installing and launching your app on ${color.bold(
+        selectedDevice.name
+      )}`
     );
-    throw new Error(`Failed to install the app on the ${selectedDevice.name}`, {
-      cause: (error as SubprocessError).stderr,
-    });
+    throw new RnefError((error as SubprocessError).stderr);
   }
 
-  loader.stop(`Installed the app on the ${selectedDevice.name}.`);
+  loader.stop(`Installed the app on ${color.bold(selectedDevice.name)}.`);
   return;
 }

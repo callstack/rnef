@@ -1,8 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { color } from '../color.js';
 import type { FingerprintSources } from '../fingerprint/index.js';
 import { nativeFingerprint } from '../fingerprint/index.js';
 import { getCacheRootPath } from '../project.js';
+import { spinner } from '../prompts.js';
 
 export const BUILD_CACHE_DIR = 'remote-build';
 
@@ -102,10 +104,15 @@ export async function formatArtifactName({
   if (!platform || !traits) {
     return '';
   }
+  const loader = spinner();
+  loader.start('Calculating project fingerprint');
   const { hash } = await nativeFingerprint(root, {
     ...fingerprintOptions,
     platform,
   });
+  loader.stop(
+    `Calculated project fingerprint: ${color.bold(color.magenta(hash))}`
+  );
   return `rnef-${platform}-${traits.join('-')}-${hash}`;
 }
 

@@ -107,14 +107,7 @@ export async function runAndroid(
       if (!binaryPath) {
         await runGradle({ tasks, androidProject, args, artifactName });
       }
-      await tryInstallAppOnDevice(
-        device,
-        androidProject,
-        args,
-        tasks,
-        binaryPath
-      );
-      await tryLaunchAppOnDevice(device, androidProject, args);
+      await runOnDevice({ device, androidProject, args, tasks, binaryPath });
     }
   } else {
     if ((await getDevices()).length === 0) {
@@ -133,14 +126,7 @@ export async function runAndroid(
     }
 
     for (const device of await listAndroidDevices()) {
-      await tryInstallAppOnDevice(
-        device,
-        androidProject,
-        args,
-        tasks,
-        binaryPath
-      );
-      await tryLaunchAppOnDevice(device, androidProject, args);
+      await runOnDevice({ device, androidProject, args, tasks, binaryPath });
     }
   }
 
@@ -239,6 +225,23 @@ async function promptForDeviceSelection(
   });
 
   return selected;
+}
+
+async function runOnDevice({
+  device,
+  androidProject,
+  args,
+  tasks,
+  binaryPath,
+}: {
+  device: DeviceData;
+  androidProject: AndroidProject;
+  args: Flags;
+  tasks: string[];
+  binaryPath: string | undefined;
+}) {
+  await tryInstallAppOnDevice(device, androidProject, args, tasks, binaryPath);
+  await tryLaunchAppOnDevice(device, androidProject, args);
 }
 
 export const runOptions = [
