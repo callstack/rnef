@@ -32,7 +32,16 @@ export const TEMPLATES: TemplateInfo[] = [
   },
 ];
 
-export const PLUGINS: TemplateInfo[] = [];
+export const PLUGINS: TemplateInfo[] = [
+  {
+    type: 'npm',
+    name: 'brownfield-ios',
+    packageName: '@rnef/plugin-brownfield-ios',
+    version: 'latest',
+    directory: 'template',
+    importName: 'pluginBrownfieldIos',
+  }
+];
 
 export const BUNDLERS: TemplateInfo[] = [
   {
