@@ -12,6 +12,7 @@ type BuildJsBundleOptions = {
   bundleOutputPath: string;
   assetsDestPath: string;
   useHermes?: boolean;
+  sourcemapOutputPath?: string;
 };
 
 /**
@@ -41,6 +42,7 @@ export async function buildJsBundle(options: BuildJsBundleOptions) {
     options.bundleOutputPath,
     '--assets-dest',
     options.assetsDestPath,
+    ...(options.sourcemapOutputPath ? ['--sourcemap-output', options.sourcemapOutputPath] : []),
   ];
   try {
     await spawn('rnef', rnefBundleArgs, { preferLocal: true });
@@ -54,5 +56,8 @@ export async function buildJsBundle(options: BuildJsBundleOptions) {
     return;
   }
 
-  await runHermes({ bundleOutputPath: options.bundleOutputPath });
+  await runHermes({
+    bundleOutputPath: options.bundleOutputPath,
+    sourcemapOutputPath: options.sourcemapOutputPath,
+  });
 }

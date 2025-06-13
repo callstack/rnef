@@ -64,5 +64,8 @@ export async function buildJsBundle(options: BuildJsBundleOptions) {
     return;
   }
 
-  await runHermes({ bundleOutputPath: options.bundleOutputPath });
+  await runHermes({
+    bundleOutputPath: options.bundleOutputPath,
+    sourcemapOutputPath: options.sourcemapOutputPath,
+  });
 }

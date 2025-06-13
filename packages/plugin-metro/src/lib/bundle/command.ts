@@ -62,7 +62,10 @@ export function registerBundleCommand(api: PluginApi) {
       if (args.hermes) {
         const loader = spinner();
         loader.start('Running Hermes compiler...');
-        await runHermes({ bundleOutputPath: args.bundleOutput });
+        await runHermes({
+          bundleOutputPath: args.bundleOutput,
+          sourcemapOutputPath: args.sourcemapOutput,
+        });
         loader.stop(
           `Hermes bytecode bundle created at: ${color.cyan(args.bundleOutput)}`
         );
