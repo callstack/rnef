@@ -91,7 +91,23 @@ Update the token under "${color.bold(
         )}" key in ${color.cyan('rnef.config.mjs')} config file.
 
 📘 Read more about generating a new token: ${color.cyan(
-          'https://www.rnef.dev/docs/remote-cache/github-actions/configuration#generate-github-personal-access-token-for-downloading-cached-builds'
+          'https://rnef.dev/docs/remote-cache/github-actions/configuration#generate-github-personal-access-token-for-downloading-cached-builds'
+        )}`
+      );
+    }
+    if ((error as { message: string }).message.includes('404 Not Found')) {
+      throw new RnefError(
+        `Failed to fetch GitHub artifacts due to "404 Not Found" error. This can happen for the following reasons:
+- permission mismatch between your GitHub Personal Access Token and the repository
+- you're blocked by the owner of the repository
+- repository address is incorrect
+
+Make sure the repository information and token under "${color.bold(
+          'remoteCacheProvider'
+        )}" key in ${color.cyan('rnef.config.mjs')} config file is valid.
+
+📘 Read more about generating a new token: ${color.cyan(
+          'https://rnef.dev/docs/remote-cache/github-actions/configuration#generate-github-personal-access-token-for-downloading-cached-builds'
         )}`
       );
     }
