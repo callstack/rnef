@@ -1,6 +1,16 @@
-pluginManagement { includeBuild("../node_modules/@react-native/gradle-plugin") }
+pluginManagement {
+    apply from: "./utils.gradle"
+    def reactNativePath = resolveNodeModule('react-native', rootDir)
+    def gradlePluginPath = resolveNodeModule('@react-native/gradle-plugin', reactNativePath)
+
+    settings.ext.gradlePluginPath = gradlePluginPath.path
+    includeBuild(gradlePluginPath.path)
+}
+
 plugins { id("com.facebook.react.settings") }
 extensions.configure(com.facebook.react.ReactSettingsExtension){ ex -> ex.autolinkLibrariesFromCommand(['npx', 'rnef', 'config', '-p', 'android']) }
+
 rootProject.name = 'HelloWorld'
+
 include ':app'
-includeBuild('../node_modules/@react-native/gradle-plugin')
+includeBuild(ext.gradlePluginPath)
