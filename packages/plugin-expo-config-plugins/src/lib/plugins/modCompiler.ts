@@ -18,12 +18,12 @@ const withDefaultBaseMods: typeof expoWithDefaultBaseMods = (config, props) => {
   return config;
 };
 
-export const compileModsAsync: typeof expoCompileModsAsync = (
+export const compileModsAsync: typeof expoCompileModsAsync = async (
   config,
   props
 ) => {
   if (props.introspect === true) {
-    console.warn('`introspect` is not supported by react-native-test-app');
+    console.warn('`introspect` is not supported');
   }
 
   config = withDefaultBaseMods(config);

@@ -3,7 +3,7 @@ import { makeFilePathModifier, makeNullProvider } from '../provider.js';
 import type { IosModFileProviders } from '../types.js';
 
 // @todo rewrite template finding and copying logic
-const modifyFilePath = makeFilePathModifier('node_modules/../ios/App76');
+const modifyFilePath = makeFilePathModifier('node_modules/../ios/AppConfigPlugins');
 
 const nullProvider = makeNullProvider();
 
@@ -16,14 +16,14 @@ const defaultProviders: IosModFileProviders = {
   appDelegate: modifyFilePath(
     expoProviders.appDelegate,
     // @todo rewrite template finding and copying logic
-    'App76/AppDelegate.swift'
+    'AppConfigPlugins/AppDelegate.swift'
   ),
   // @ts-expect-error todo fix
   expoPlist: nullProvider,
   xcodeproj: modifyFilePath(
     expoProviders.xcodeproj,
     // @todo rewrite template finding and copying logic
-    'App76.xcodeproj/project.pbxproj'
+    'AppConfigPlugins.xcodeproj/project.pbxproj'
   ),
   infoPlist: modifyFilePath(expoProviders.infoPlist, 'Info.plist'),
   // @ts-expect-error todo fix

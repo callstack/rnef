@@ -95,10 +95,10 @@ importers:
         version: 19.1.0(typescript@5.8.3)
       '@rnef/config':
         specifier: ^0.8.2
-        version: link:../config
+        version: 0.8.3
       '@rnef/tools':
         specifier: ^0.8.2
-        version: link:../tools
+        version: 0.8.3
       adm-zip:
         specifier: ^0.5.16
         version: 0.5.16
@@ -126,10 +126,10 @@ importers:
         version: 7.26.2
       '@rnef/provider-github':
         specifier: ^0.8.2
-        version: link:../provider-github
+        version: 0.8.3
       '@rnef/tools':
         specifier: ^0.8.2
-        version: link:../tools
+        version: 0.8.3
       joi:
         specifier: ^17.13.3
         version: 17.13.3
@@ -148,7 +148,7 @@ importers:
     dependencies:
       '@rnef/tools':
         specifier: ^0.8.2
-        version: link:../tools
+        version: 0.8.3
       gradient-string:
         specifier: ^3.0.0
         version: 3.0.0
@@ -182,7 +182,7 @@ importers:
         version: 19.1.0
       '@rnef/tools':
         specifier: ^0.8.2
-        version: link:../tools
+        version: 0.8.3
       adm-zip:
         specifier: ^0.5.16
         version: 0.5.16
@@ -195,7 +195,7 @@ importers:
         version: 19.1.0
       '@rnef/config':
         specifier: ^0.8.2
-        version: link:../config
+        version: 0.8.3
       '@types/adm-zip':
         specifier: ^0.5.7
         version: 0.5.7
@@ -210,7 +210,7 @@ importers:
         version: 19.1.0
       '@rnef/tools':
         specifier: ^0.8.2
-        version: link:../tools
+        version: 0.8.3
       '@types/adm-zip':
         specifier: ^0.5.7
         version: 0.5.7
@@ -232,7 +232,7 @@ importers:
         version: 19.1.0
       '@rnef/config':
         specifier: ^0.8.2
-        version: link:../config
+        version: 0.8.3
 
   packages/platform-ios:
     dependencies:
@@ -244,17 +244,17 @@ importers:
         version: 19.1.0
       '@rnef/platform-apple-helpers':
         specifier: ^0.8.2
-        version: link:../platform-apple-helpers
+        version: 0.8.3(typescript@5.6.3)
       '@rnef/tools':
         specifier: ^0.8.2
-        version: link:../tools
+        version: 0.8.3
       tslib:
         specifier: ^2.3.0
         version: 2.8.1
     devDependencies:
       '@rnef/config':
         specifier: ^0.8.2
-        version: link:../config
+        version: 0.8.3
 
   packages/plugin-brownfield-android:
     dependencies:
@@ -263,10 +263,10 @@ importers:
         version: 19.1.0
       '@rnef/platform-android':
         specifier: ^0.8.2
-        version: link:../platform-android
+        version: 0.8.3
       '@rnef/tools':
         specifier: ^0.8.2
-        version: link:../tools
+        version: 0.8.3
       tslib:
         specifier: ^2.3.0
         version: 2.8.1
@@ -276,7 +276,7 @@ importers:
         version: 19.1.0
       '@rnef/config':
         specifier: ^0.8.2
-        version: link:../config
+        version: 0.8.3
 
   packages/plugin-brownfield-ios:
     dependencies:
@@ -288,33 +288,33 @@ importers:
         version: 19.1.0
       '@rnef/platform-apple-helpers':
         specifier: ^0.8.2
-        version: link:../platform-apple-helpers
+        version: 0.8.3(typescript@5.6.3)
       '@rnef/tools':
         specifier: ^0.8.2
-        version: link:../tools
+        version: 0.8.3
       tslib:
         specifier: ^2.3.0
         version: 2.8.1
     devDependencies:
       '@rnef/config':
         specifier: ^0.8.2
-        version: link:../config
+        version: 0.8.3
 
   packages/plugin-expo-config-plugins:
     dependencies:
       '@expo/config-plugins':
-        specifier: ^9.0.15
-        version: 9.1.7
+        specifier: ^10.1.2
+        version: 10.1.2
       '@rnef/tools':
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: ^0.8.2
+        version: 0.8.3
       tslib:
         specifier: ^2.3.0
         version: 2.8.1
     devDependencies:
       '@rnef/config':
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: ^0.8.2
+        version: 0.8.3
 
   packages/plugin-metro:
     dependencies:
@@ -326,7 +326,7 @@ importers:
         version: 0.80.1
       '@rnef/tools':
         specifier: ^0.8.2
-        version: link:../tools
+        version: 0.8.3
       metro:
         specifier: ^0.82.2
         version: 0.82.5
@@ -348,7 +348,7 @@ importers:
         version: 0.80.1
       '@rnef/config':
         specifier: ^0.8.2
-        version: link:../config
+        version: 0.8.3
 
   packages/plugin-repack:
     dependencies:
@@ -357,7 +357,7 @@ importers:
         version: 5.0.3(@babel/core@7.25.2)(@rspack/core@1.3.10(@swc/helpers@0.5.17))(react-native@0.80.1(@babel/core@7.25.2)(@types/react@19.1.8)(react@19.1.0))(webpack@5.96.1(@swc/core@1.5.29(@swc/helpers@0.5.17)))
       '@rnef/tools':
         specifier: ^0.8.2
-        version: link:../tools
+        version: 0.8.3
       '@rspack/core':
         specifier: ^1.2.8
         version: 1.3.10(@swc/helpers@0.5.17)
@@ -370,13 +370,13 @@ importers:
     devDependencies:
       '@rnef/config':
         specifier: ^0.8.2
-        version: link:../config
+        version: 0.8.3
 
   packages/provider-github:
     dependencies:
       '@rnef/tools':
         specifier: ^0.8.2
-        version: link:../tools
+        version: 0.8.3
       ts-regex-builder:
         specifier: ^1.8.2
         version: 1.8.2
@@ -394,7 +394,7 @@ importers:
         version: 3.830.0
       '@rnef/tools':
         specifier: ^0.8.2
-        version: link:../tools
+        version: 0.8.3
       tslib:
         specifier: ^2.3.0
         version: 2.8.1
@@ -1109,8 +1109,8 @@ packages:
     resolution: {integrity: sha512-1+WqvgNMhmlAambTvT3KPtCl/Ibr68VldY2XY40SL1CE0ZXiakFR/cbTspaF5HsnpDMvcYYoJHfl4980NBjGag==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@expo/config-plugins@9.1.7':
-    resolution: {integrity: sha512-8dJzOesaQS+8XuT49pdSHej1z6XG3x2fqN2O3v807ri8uhxm2N9P6+iZBn19xv9+7OxraOc2tH3nEIWE19Za0w==}
+  '@expo/config-plugins@10.1.2':
+    resolution: {integrity: sha512-IMYCxBOcnuFStuK0Ay+FzEIBKrwW8OVUMc65+v0+i7YFIIe8aL342l7T4F8lR4oCfhXn7d6M5QPgXvjtc/gAcw==}
 
   '@expo/config-types@53.0.5':
     resolution: {integrity: sha512-kqZ0w44E+HEGBjy+Lpyn0BVL5UANg/tmNixxaRMLS6nf37YsDrLk2VMAmeKMMk5CKG0NmOdVv3ngeUjRQMsy9g==}
@@ -1470,11 +1470,20 @@ packages:
     resolution: {integrity: sha512-O3rHJzAQKamUz1fvE0Qaw0xSFqsA/yafi2iqeE0pvdFtCO1viYx8QL6f3Ln/aCCTLxs68SLf0KPM9eSeM8yBnA==}
     engines: {node: '>=14.0.0'}
 
-  '@rnef/config@0.2.0':
-    resolution: {integrity: sha512-Xm5GDYAfceq/oQIIKI6F3IGlzGdGcFb0BEJMC15HkJVASQ4gEdzlnUYyzbgzyJtqqgU4BqOv0CTW6xM9Bg3b+A==}
+  '@rnef/config@0.8.3':
+    resolution: {integrity: sha512-fCnKtIY76c0MqEVsGJ9Zls0fvtvmCM/HjjozA32Y44rwCSXZrQNv8p1bSPoOEsVcwHS0TZOf1utq6mVt2sPvqQ==}
 
-  '@rnef/tools@0.2.0':
-    resolution: {integrity: sha512-T9rLFhYpU8e0CHMlsK1JjsBPZRtzXkGLVNXKDrpib+NnKV4LBGU2tUQQru4TrMUwII7RJBAUitfE3qcEOUTXOA==}
+  '@rnef/platform-android@0.8.3':
+    resolution: {integrity: sha512-pOustzVNi0b7P+zBxCnAmJjKjTLNyU3t2zrF5tdySyVbVG6EYPD3Q5ni12Yb6IRxibow+/rgXIGPf4nZOAF7XQ==}
+
+  '@rnef/platform-apple-helpers@0.8.3':
+    resolution: {integrity: sha512-0TIwpTRlYNl31KGu+4VDHS+t7VBDzumL+9iUtRlyRcd19c+Fvk3pffKgiJ+hwk2cw2oOTsIa3JW6GwS1SgZyNQ==}
+
+  '@rnef/provider-github@0.8.3':
+    resolution: {integrity: sha512-i67HA4sPlgvaVD3hqr36gS6WlrdyYQxxtgVFwwrFeKYc42Nly7/O8+xgqQzGY0lsxQDET+ZRk+lGlD+effS8vw==}
+
+  '@rnef/tools@0.8.3':
+    resolution: {integrity: sha512-67I+KSf+AR74/00FWeOu4RV1ygtb29wVJVdoYI4bh9pQ5TAXH52ZR1mSLhKPagAOSSfcotVSkuC2EBlykuwQeA==}
 
   '@rollup/rollup-android-arm-eabi@4.24.0':
     resolution: {integrity: sha512-Q6HJd7Y6xdB48x8ZNVDOqsbh2uByBhgK8PiQgPhwkIw/HC/YX5Ghq2mQY5sRMZWHb3VsFkWooUVOZHKr7DmDIA==}
@@ -3765,6 +3774,10 @@ packages:
 
   getenv@1.0.0:
     resolution: {integrity: sha512-7yetJWqbS9sbn0vIfliPsFgoXMKn/YMF+Wuiog97x+urnSRRRZ7xB+uVkwGKzRgq9CDFfMQnE9ruL5DHv9c6Xg==}
+    engines: {node: '>=6'}
+
+  getenv@2.0.0:
+    resolution: {integrity: sha512-VilgtJj/ALgGY77fiLam5iD336eSWi96Q15JSAG1zi8NRBysm3LXKdGnHb4m5cuyxvOLQQKWpBZAT6ni4FI2iQ==}
     engines: {node: '>=6'}
 
   getpass@0.1.7:
@@ -7618,7 +7631,7 @@ snapshots:
       '@eslint/core': 0.15.1
       levn: 0.4.1
 
-  '@expo/config-plugins@9.1.7':
+  '@expo/config-plugins@10.1.2':
     dependencies:
       '@expo/config-types': 53.0.5
       '@expo/json-file': 9.1.5
@@ -7626,7 +7639,7 @@ snapshots:
       '@expo/sdk-runtime-versions': 1.0.0
       chalk: 4.1.2
       debug: 4.4.0
-      getenv: 1.0.0
+      getenv: 2.0.0
       glob: 10.4.5
       resolve-from: 5.0.0
       semver: 7.7.1
@@ -8053,6 +8066,17 @@ snapshots:
       execa: 5.1.1
       fast-glob: 3.3.3
 
+  '@react-native-community/cli-config@19.1.0(typescript@5.6.3)':
+    dependencies:
+      '@react-native-community/cli-tools': 19.1.0
+      chalk: 4.1.2
+      cosmiconfig: 9.0.0(typescript@5.6.3)
+      deepmerge: 4.3.1
+      fast-glob: 3.3.3
+      joi: 17.13.3
+    transitivePeerDependencies:
+      - typescript
+
   '@react-native-community/cli-config@19.1.0(typescript@5.8.3)':
     dependencies:
       '@react-native-community/cli-tools': 19.1.0
@@ -8182,22 +8206,60 @@ snapshots:
 
   '@remix-run/router@1.23.0': {}
 
-  '@rnef/config@0.2.0':
+  '@rnef/config@0.8.3':
     dependencies:
+      '@babel/code-frame': 7.26.2
+      '@rnef/provider-github': 0.8.3
+      '@rnef/tools': 0.8.3
+      joi: 17.13.3
       tslib: 2.8.1
+    transitivePeerDependencies:
+      - supports-color
 
-  '@rnef/tools@0.2.0':
+  '@rnef/platform-android@0.8.3':
+    dependencies:
+      '@react-native-community/cli-config-android': 19.1.0
+      '@rnef/tools': 0.8.3
+      adm-zip: 0.5.16
+      tslib: 2.8.1
+    transitivePeerDependencies:
+      - supports-color
+
+  '@rnef/platform-apple-helpers@0.8.3(typescript@5.6.3)':
+    dependencies:
+      '@react-native-community/cli-config': 19.1.0(typescript@5.6.3)
+      '@react-native-community/cli-config-apple': 19.1.0
+      '@rnef/tools': 0.8.3
+      '@types/adm-zip': 0.5.7
+      adm-zip: 0.5.16
+      fast-glob: 3.3.3
+      fast-xml-parser: 4.5.1
+      tslib: 2.8.1
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+
+  '@rnef/provider-github@0.8.3':
+    dependencies:
+      '@rnef/tools': 0.8.3
+      ts-regex-builder: 1.8.2
+      tslib: 2.8.1
+    transitivePeerDependencies:
+      - supports-color
+
+  '@rnef/tools@0.8.3':
     dependencies:
       '@clack/prompts': 0.10.0
       '@expo/fingerprint': 0.11.6
       '@types/adm-zip': 0.5.7
       adm-zip: 0.5.16
       appdirsjs: 1.2.7
+      fast-glob: 3.3.3
       is-unicode-supported: 2.1.0
       nano-spawn: 0.2.0
       picocolors: 1.1.1
       string-argv: 0.3.2
-      ts-regex-builder: 1.8.2
+      tar: 7.4.3
       tslib: 2.8.1
     transitivePeerDependencies:
       - supports-color
@@ -10167,6 +10229,15 @@ snapshots:
       js-yaml: 3.14.1
       parse-json: 4.0.0
 
+  cosmiconfig@9.0.0(typescript@5.6.3):
+    dependencies:
+      env-paths: 2.2.1
+      import-fresh: 3.3.0
+      js-yaml: 4.1.0
+      parse-json: 5.2.0
+    optionalDependencies:
+      typescript: 5.6.3
+
   cosmiconfig@9.0.0(typescript@5.8.3):
     dependencies:
       env-paths: 2.2.1
@@ -10838,6 +10909,8 @@ snapshots:
   get-stream@6.0.1: {}
 
   getenv@1.0.0: {}
+
+  getenv@2.0.0: {}
 
   getpass@0.1.7:
     dependencies:

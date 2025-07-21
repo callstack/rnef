@@ -1,6 +1,7 @@
 
 import { BaseMods } from "../ExpoConfigPlugins.js";
 import { makeFilePathModifier } from "../provider.js";
+import type { AndroidModFileProviders } from "../types.js";
 
 const modifyFilePath = makeFilePathModifier(
   // @todo rewrite template finding and copying logic
@@ -10,8 +11,7 @@ const modifyFilePath = makeFilePathModifier(
 // https://github.com/expo/expo/blob/sdk-51/packages/%40expo/config-plugins/src/plugins/withAndroidBaseMods.ts
 const expoProviders = BaseMods.getAndroidModFileProviders();
 
-/** @type {typeof expoProviders} */
-const defaultProviders = {
+const defaultProviders: AndroidModFileProviders = {
   dangerous: expoProviders.dangerous,
   finalized: expoProviders.finalized,
   manifest: modifyFilePath(
@@ -44,12 +44,12 @@ const defaultProviders = {
   mainActivity: modifyFilePath(
     expoProviders.mainActivity,
     // @todo rewrite template finding and copying logic
-    "app/src/main/java/com/app76/MainActivity.kt"
+    "app/src/main/java/com/appconfigplugins/MainActivity.kt"
   ),
   mainApplication: modifyFilePath(
     expoProviders.mainApplication,
     // @todo rewrite template finding and copying logic
-    "app/src/main/java/com/app76/MainApplication.kt"
+    "app/src/main/java/com/appconfigplugins/MainApplication.kt"
   ),
 };
 

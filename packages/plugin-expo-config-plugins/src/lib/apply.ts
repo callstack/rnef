@@ -1,4 +1,3 @@
-
 import * as fs from 'node:fs/promises';
 import { withPlugins } from './ExpoConfigPlugins.js';
 import { compileModsAsync } from './plugins/modCompiler.js';
@@ -17,12 +16,18 @@ export async function applyConfigPlugins({
   }
 
   const content = await fs.readFile(appJsonPath, { encoding: 'utf-8' });
-  const { plugins, ...config } = JSON.parse(content);
-  if (!Array.isArray(plugins) || plugins.length === 0) {
+  const { expo, ...rest } = JSON.parse(content);
+  const appJsonConfig = expo || rest;
+
+  if (
+    !Array.isArray(appJsonConfig.plugins) ||
+    appJsonConfig.plugins.length === 0
+  ) {
     return;
   }
+
   return compileModsAsync(
-    withPlugins(withInternal(config, info), plugins),
+    withPlugins(withInternal(appJsonConfig, info), appJsonConfig.plugins),
     info
   );
 }

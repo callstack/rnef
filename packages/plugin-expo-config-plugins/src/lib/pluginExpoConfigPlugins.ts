@@ -13,11 +13,10 @@ export const pluginExpoConfigPlugins =
   (api: PluginApi): PluginOutput => {
     api.registerCommand({
       name: 'apply-config-plugins',
-      description: 'Starts Metro dev server.',
+      description: 'Applies config plugins to the project.',
       action: async (args: ConfigPluginsArgs) => {
         const packageJsonPath = path.join(api.getProjectRoot(), 'package.json');
         const content = fs.readFileSync(packageJsonPath, 'utf-8');
-
         if (!content.includes('"@expo/config-plugins"')) {
           return;
         }

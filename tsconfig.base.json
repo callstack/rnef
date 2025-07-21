@@ -36,7 +36,10 @@
       ],
       "@rnef/provider-github": ["packages/provider-github/dist/src/index"],
       "@rnef/provider-s3": ["packages/provider-s3/dist/src/index"],
-      "@rnef/welcome-screen": ["packages/welcome-screen/dist/src/index"]
+      "@rnef/welcome-screen": ["packages/welcome-screen/dist/src/index"],
+      "@rnef/plugin-expo-config-plugins": [
+        "packages/plugin-expo-config-plugins/dist/src/index"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]
