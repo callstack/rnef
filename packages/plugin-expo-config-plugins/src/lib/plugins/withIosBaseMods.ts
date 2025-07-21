@@ -3,7 +3,7 @@ import { makeFilePathModifier, makeNullProvider } from '../provider.js';
 import type { IosModFileProviders } from '../types.js';
 
 // @todo rewrite template finding and copying logic
-const modifyFilePath = makeFilePathModifier('node_modules/../ios/AppConfigPlugins');
+const modifyFilePath = makeFilePathModifier('node_modules/../ios');
 
 const nullProvider = makeNullProvider();
 
@@ -25,7 +25,7 @@ const defaultProviders: IosModFileProviders = {
     // @todo rewrite template finding and copying logic
     'AppConfigPlugins.xcodeproj/project.pbxproj'
   ),
-  infoPlist: modifyFilePath(expoProviders.infoPlist, 'Info.plist'),
+  infoPlist: modifyFilePath(expoProviders.infoPlist, 'AppConfigPlugins/Info.plist'),
   // @ts-expect-error todo fix
   entitlements: nullProvider,
   // @ts-expect-error todo fix
@@ -34,8 +34,7 @@ const defaultProviders: IosModFileProviders = {
     language: 'rb' as const,
     contents: '',
   }),
-  // @ts-expect-error todo fix
-  podfileProperties: makeNullProvider(),
+  podfileProperties: expoProviders.podfileProperties,
 };
 
 export function getIosModFileProviders() {
