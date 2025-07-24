@@ -3,11 +3,7 @@ import path from 'node:path';
 import * as clientS3 from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import type { RemoteArtifact, RemoteBuildCache } from '@rnef/tools';
-import { spawn } from '@rnef/tools';
-import AdmZip from 'adm-zip';
 import type { Readable } from 'stream';
-import { templateIndexHtmlPlugin } from './templateIndexHtml.js';
-import { templateManifestPlistPlugin } from './templateManifestPlist.js';
 
 function toWebStream(stream: Readable): ReadableStream {
   return new ReadableStream({
@@ -199,16 +195,22 @@ export class S3BuildCache implements RemoteBuildCache {
     return { name: artifactName, url: presignedUrl };
   }
 
-  async uploadFolder({
+  async uploadAdhocFolder({
     artifactName,
     folderPath,
-    adHoc,
   }: {
     artifactName: string;
     folderPath: string;
-    adHoc?: boolean;
   }): Promise<RemoteArtifact> {
     const uploadPromises: Promise<void>[] = [];
+
+    // Return a reference to the folder (using the first file as the main URL)
+    const firstFileKey = `${this.directory}/ad-hoc/${artifactName}`;
+    const presignedUrl = await getSignedUrl(
+      this.s3,
+      new clientS3.GetObjectCommand({ Bucket: this.bucket, Key: firstFileKey }),
+      { expiresIn: this.linkExpirationTime }
+    );
 
     const uploadFileToFolder = async (
       filePath: string,
@@ -221,87 +223,29 @@ export class S3BuildCache implements RemoteBuildCache {
       await this.uploadFile(key, fileBuffer, isHTML ? 'text/html' : undefined);
     };
 
-    const firstFileKey = `${this.directory}/ad-hoc/${artifactName}`;
-    const presignedUrl = await getSignedUrl(
-      this.s3,
-      new clientS3.GetObjectCommand({ Bucket: this.bucket, Key: firstFileKey }),
-      { expiresIn: this.linkExpirationTime }
-    );
-
-    if (adHoc) {
-      const ipaFiles = fs
-        .readdirSync(folderPath)
-        .filter((file) => file.endsWith('.ipa'));
-      if (ipaFiles.length === 0) {
-        throw new Error(`No .ipa file found in ${folderPath}`);
-      }
-
-      const ipaFileName = ipaFiles[0];
-      const ipaPath = path.join(folderPath, ipaFileName);
-      const appName = path.basename(ipaFileName, '.ipa');
-
-      const zip = new AdmZip(ipaPath);
-      const infoPlistPath = `Payload/${appName}.app/Info.plist`;
-      const infoPlistEntry = zip.getEntry(infoPlistPath);
-
-      if (!infoPlistEntry) {
-        throw new Error(
-          `Info.plist not found at ${infoPlistPath} in ${ipaFileName}`
-        );
-      }
-
-      const infoPlistBuffer = infoPlistEntry.getData();
-      const tempPlistPath = path.join(folderPath, 'temp_info.plist');
-      fs.writeFileSync(tempPlistPath, infoPlistBuffer);
-
-      let version = 'unknown';
-      let bundleIdentifier = 'unknown';
-      try {
-        await spawn('plutil', [
-          '-convert',
-          'json',
-          '-o',
-          tempPlistPath,
-          tempPlistPath,
-        ]);
-
-        const jsonContent = fs.readFileSync(tempPlistPath, 'utf8');
-        const infoPlistJson = JSON.parse(jsonContent) as Record<string, any>;
-
-        version =
-          infoPlistJson['CFBundleShortVersionString'] ||
-          infoPlistJson['CFBundleVersion'] ||
-          'unknown';
-        bundleIdentifier = infoPlistJson['CFBundleIdentifier'] || 'unknown';
-      } finally {
-        if (fs.existsSync(tempPlistPath)) {
-          fs.unlinkSync(tempPlistPath);
-        }
-      }
-
-      const indexHtml = templateIndexHtmlPlugin({
-        appName,
-        bundleIdentifier,
-        version,
-        manifestPlistUrl: `${presignedUrl.split('?')[0]}/manifest.plist`,
-      });
-      const manifestPlist = templateManifestPlistPlugin({
-        appName,
-        version,
-        baseUrl: presignedUrl.split('?')[0],
-        ipaName: ipaFileName,
-        bundleIdentifier,
-        platformIdentifier: 'com.apple.platform.iphoneos',
-      });
-      fs.writeFileSync(path.join(folderPath, 'index.html'), indexHtml);
-      fs.writeFileSync(path.join(folderPath, 'manifest.plist'), manifestPlist);
-    }
-
     const processDirectory = (dirPath: string, relativePath: string = '') => {
       const items = fs.readdirSync(dirPath);
 
       for (const item of items) {
         const fullPath = path.join(dirPath, item);
+
+        if (fullPath.endsWith('.html')) {
+          fs.writeFileSync(
+            fullPath,
+            fs
+              .readFileSync(fullPath, 'utf-8')
+              .replace('{{BASE_URL}}', presignedUrl.split('?')[0])
+          );
+        }
+        if (fullPath.endsWith('.plist')) {
+          fs.writeFileSync(
+            fullPath,
+            fs
+              .readFileSync(fullPath, 'utf-8')
+              .replace('{{BASE_URL}}', presignedUrl.split('?')[0])
+          );
+        }
+
         const itemRelativePath = relativePath
           ? path.join(relativePath, item)
           : item;

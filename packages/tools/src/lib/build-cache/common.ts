@@ -85,21 +85,18 @@ export interface RemoteBuildCache {
   }): Promise<RemoteArtifact>;
 
   /**
-   * Upload a folder with multiple files to remote storage
+   * Upload a folder with multiple files to remote storage for ad-hoc builds
    * @param artifactName - Name of the artifact to upload, e.g. `rnef-android-debug-1234567890` for android in debug variant
    * @param folderPath - Path to the folder containing files to upload
-   * @param adHoc - Optional flag to indicate if the artifact is ad-hoc for iOS apps, instructing the provider to add additional files to the artifact
    * @returns Remote artifact info if upload successful
    * @throws {Error} Throws if upload fails
    */
-  uploadFolder?({
+  uploadAdhocFolder?({
     artifactName,
     folderPath,
-    adHoc,
   }: {
     artifactName: string;
     folderPath: string;
-    adHoc?: boolean;
   }): Promise<RemoteArtifact>;
 }
 

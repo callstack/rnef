@@ -9,6 +9,7 @@ import {
   handleDownloadResponse,
   logger,
   RnefError,
+  spawn,
 } from '@rnef/tools';
 import AdmZip from 'adm-zip';
 import * as tar from 'tar';
@@ -156,14 +157,97 @@ async function remoteCache({
       const buffer = zip.toBuffer();
 
       try {
-        const uploadedArtifact =
-          isBinaryPathDirectory && remoteBuildCache.uploadFolder
-            ? await remoteBuildCache.uploadFolder({
-                artifactName,
-                folderPath: binaryPath,
-                adHoc: true,
-              })
-            : await remoteBuildCache.upload({ artifactName, buffer });
+        let uploadedArtifact;
+
+        if (isBinaryPathDirectory && remoteBuildCache.uploadAdhocFolder) {
+          // Extract Info.plist from .ipa file for ad-hoc distribution
+          const ipaFiles = fs
+            .readdirSync(binaryPath)
+            .filter((file) => file.endsWith('.ipa'));
+          if (ipaFiles.length === 0) {
+            throw new RnefError(`No .ipa file found in ${binaryPath}`);
+          }
+
+          const ipaFileName = ipaFiles[0];
+          const ipaPath = path.join(binaryPath, ipaFileName);
+          const appName = path.basename(ipaFileName, '.ipa');
+
+          const zip = new AdmZip(ipaPath);
+          const infoPlistPath = `Payload/${appName}.app/Info.plist`;
+          const infoPlistEntry = zip.getEntry(infoPlistPath);
+
+          if (!infoPlistEntry) {
+            throw new RnefError(
+              `Info.plist not found at ${infoPlistPath} in ${ipaFileName}`
+            );
+          }
+
+          const infoPlistBuffer = infoPlistEntry.getData();
+          const tempPlistPath = path.join(binaryPath, 'temp_info.plist');
+          fs.writeFileSync(tempPlistPath, infoPlistBuffer);
+
+          let version = 'unknown';
+          let bundleIdentifier = 'unknown';
+          try {
+            await spawn('plutil', [
+              '-convert',
+              'json',
+              '-o',
+              tempPlistPath,
+              tempPlistPath,
+            ]);
+
+            const jsonContent = fs.readFileSync(tempPlistPath, 'utf8');
+            const infoPlistJson = JSON.parse(jsonContent) as Record<
+              string,
+              any
+            >;
+
+            version =
+              infoPlistJson['CFBundleShortVersionString'] ||
+              infoPlistJson['CFBundleVersion'] ||
+              'unknown';
+            bundleIdentifier = infoPlistJson['CFBundleIdentifier'] || 'unknown';
+          } finally {
+            if (fs.existsSync(tempPlistPath)) {
+              fs.unlinkSync(tempPlistPath);
+            }
+          }
+
+          // Generate templates for ad-hoc distribution
+          // We'll generate the base URL after upload, so use a placeholder for now
+          const indexHtml = templateIndexHtml({
+            appName,
+            bundleIdentifier,
+            version,
+            manifestPlistUrl: `{{BASE_URL}}/manifest.plist`,
+          });
+          const manifestPlist = templateManifestPlist({
+            appName,
+            version,
+            baseUrl: '{{BASE_URL}}',
+            ipaName: ipaFileName,
+            bundleIdentifier,
+            platformIdentifier: 'com.apple.platform.iphoneos',
+          });
+
+          fs.writeFileSync(path.join(binaryPath, 'index.html'), indexHtml);
+          fs.writeFileSync(
+            path.join(binaryPath, 'manifest.plist'),
+            manifestPlist
+          );
+
+          uploadedArtifact = await remoteBuildCache.uploadAdhocFolder({
+            artifactName,
+            folderPath: binaryPath,
+          });
+        } else {
+          uploadedArtifact = await remoteBuildCache.upload({
+            artifactName,
+            buffer,
+          });
+        }
+
         if (isJsonOutput) {
           console.log(JSON.stringify(uploadedArtifact, null, 2));
         } else {
@@ -204,6 +288,256 @@ async function remoteCache({
   }
 
   return null;
+}
+
+// Template functions for ad-hoc iOS distribution
+function templateIndexHtml({
+  appName,
+  version,
+  bundleIdentifier,
+  manifestPlistUrl,
+}: {
+  appName: string;
+  version: string;
+  bundleIdentifier: string;
+  manifestPlistUrl: string;
+}) {
+  return `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Download iOS App</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          Oxygen, Ubuntu, Cantarell, sans-serif;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        font-size: 16px;
+      }
+
+      .container {
+        text-align: center;
+        max-width: 500px;
+        width: 100%;
+      }
+
+      .app-icon {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 48px;
+        color: white;
+      }
+
+      h1 {
+        color: #1d1d1f;
+        font-size: 28px;
+        font-weight: 600;
+        margin-bottom: 15px;
+        overflow-wrap: break-word;
+      }
+
+      .subtitle {
+        color: #86868b;
+        font-size: 16px;
+        line-height: 1.5;
+        margin-bottom: 30px;
+      }
+
+      .version {
+        color: #1d1d1f;
+        font-size: 16px;
+        line-height: 1.5;
+        margin-bottom: 10px;
+      }
+
+      .download-button {
+        background: #8232ff;
+        color: white;
+        border: none;
+        padding: 16px 32px;
+        border-radius: 2px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        margin-bottom: 20px;
+      }
+
+      .download-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 122, 255, 0.3);
+      }
+
+      .download-button:active {
+        transform: translateY(0);
+      }
+
+      .instructions {
+        background: #f5f5f7;
+        border-radius: 2px;
+        padding: 20px;
+        margin-top: 20px;
+        text-align: left;
+      }
+
+      .instructions h3 {
+        color: #1d1d1f;
+        font-size: 16px;
+        margin-bottom: 10px;
+      }
+
+      .instructions ol {
+        color: #86868b;
+        font-size: 14px;
+        line-height: 1.6;
+        padding-left: 20px;
+      }
+
+      .instructions li {
+        margin-bottom: 8px;
+      }
+
+      .adhoc-info {
+        text-align: left;
+        margin-top: 20px;
+        padding: 1em 2em;
+        border-left: 2px solid #8232ff;
+      }
+
+      .adhoc-info-title {
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+
+      .adhoc-info-text {
+        color: #1d1d1f;
+        margin: 0;
+      }
+
+      .footer {
+        text-align: center;
+        margin-top: 40px;
+        font-size: 12px;
+        color: #86868b;
+      }
+
+      .link {
+        color: #8232ff;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="app-icon">📱</div>
+
+      <h1>${appName}</h1>
+      <p class="version">${bundleIdentifier} (${version})</p>
+      <p class="subtitle">
+        Download and install the latest version of our iOS app directly to your
+        device.
+      </p>
+
+      <a
+        href="itms-services://?action=download-manifest&url=${manifestPlistUrl}"
+        class="download-button">
+        Download App
+      </a>
+
+      <div class="instructions">
+        <h3>Installation Instructions:</h3>
+        <ol>
+          <li>Tap the "Download App" button above</li>
+          <li>When prompted, tap "Install" in the popup dialog</li>
+          <li>The app will now start installing and will be available on your home screen</li>
+        </ol>
+      </div>
+
+      <div class="adhoc-info">
+        <p class="adhoc-info-title">Ad-hoc build notice</p>
+        <p class="adhoc-info-text">
+          This is an ad-hoc build for testing purposes. Make sure you're using a
+          device that's registered in the provisioning profile.
+        </p>
+      </div>
+      <div class="footer">
+        <p>
+          Generated with <a class="link" href="https://rnef.dev">RNEF</a> by
+          <a class="link" href="https://callstack.com">Callstack</a>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
+`;
+}
+
+function templateManifestPlist({
+  baseUrl,
+  ipaName,
+  bundleIdentifier,
+  version,
+  appName,
+  platformIdentifier,
+}: {
+  baseUrl: string;
+  ipaName: string;
+  bundleIdentifier: string;
+  version: string;
+  appName: string;
+  platformIdentifier: string;
+}) {
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>items</key>
+    <array>
+        <dict>
+            <key>assets</key>
+            <array>
+                <dict>
+                    <key>kind</key>
+                    <string>software-package</string>
+                    <key>url</key>
+                    <string>${baseUrl}/${ipaName}</string>
+                </dict>
+            </array>
+            <key>metadata</key>
+            <dict>
+                <key>bundle-identifier</key>
+                <string>${bundleIdentifier}</string>
+                <key>bundle-version</key>
+                <string>${version}</string>
+                <key>kind</key>
+                <string>software</string>
+                <key>platform-identifier</key>
+                <string>${
+                  platformIdentifier ?? 'com.apple.platform.iphoneos'
+                }</string>
+                <key>title</key>
+                <string>${appName}</string>
+            </dict>
+        </dict>
+      </array>
+    </dict>
+  </plist>`;
 }
 
 function validateArgs(args: Flags, action: string) {
