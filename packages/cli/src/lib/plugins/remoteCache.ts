@@ -127,10 +127,13 @@ async function remoteCache({
         throw new RnefError(`No binary found for "${artifactName}".`);
       }
       const zip = new AdmZip();
+      const isBinaryPathDirectory = fs.statSync(binaryPath).isDirectory();
+      const isAppDirectory = fs.statSync(binaryPath).isDirectory();
       const absoluteTarballPath =
         args.binaryPath ?? path.join(localArtifactPath, 'app.tar.gz');
-      const isAppDirectory = fs.statSync(binaryPath).isDirectory();
-      if (isAppDirectory) {
+      if (isBinaryPathDirectory) {
+        // skip zipping, we're uploading a folder for ad-hoc builds
+      } else if (isAppDirectory) {
         const appName = path.basename(binaryPath);
         if (!fs.existsSync(absoluteTarballPath)) {
           throw new RnefError(
@@ -153,10 +156,14 @@ async function remoteCache({
       const buffer = zip.toBuffer();
 
       try {
-        const uploadedArtifact = await remoteBuildCache.upload({
-          artifactName,
-          buffer,
-        });
+        const uploadedArtifact =
+          isBinaryPathDirectory && remoteBuildCache.uploadFolder
+            ? await remoteBuildCache.uploadFolder({
+                artifactName,
+                folderPath: binaryPath,
+                adHoc: true,
+              })
+            : await remoteBuildCache.upload({ artifactName, buffer });
         if (isJsonOutput) {
           console.log(JSON.stringify(uploadedArtifact, null, 2));
         } else {
@@ -164,7 +171,7 @@ async function remoteCache({
 - url: ${uploadedArtifact.url}`);
         }
       } finally {
-        if (isAppDirectory) {
+        if (isAppDirectory && !isBinaryPathDirectory) {
           fs.unlinkSync(absoluteTarballPath);
         }
       }

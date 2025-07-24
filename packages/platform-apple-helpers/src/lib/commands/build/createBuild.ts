@@ -71,7 +71,7 @@ export const createBuild = async ({
 
     if (args.archive) {
       const { exportDir } = getBuildPaths(platformName);
-      if (fs.statSync(exportDir).isDirectory()) {
+      if (fs.existsSync(exportDir) && fs.statSync(exportDir).isDirectory()) {
         logger.log(
           `Archives available at: ${colorLink(relativeToCwd(exportDir))}`
         );
