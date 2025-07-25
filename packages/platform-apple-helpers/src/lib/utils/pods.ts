@@ -126,6 +126,12 @@ async function runPodInstall(options: {
         ...(process.env['USE_THIRD_PARTY_JSC'] && {
           USE_THIRD_PARTY_JSC: process.env['USE_THIRD_PARTY_JSC'],
         }),
+        ...(process.env['RCT_USE_RN_DEP'] && {
+          RCT_USE_RN_DEP: process.env['RCT_USE_RN_DEP'],
+        }),
+        ...(process.env['RCT_USE_PREBUILT_RNCORE'] && {
+          RCT_USE_PREBUILT_RNCORE: process.env['RCT_USE_PREBUILT_RNCORE'],
+        }),
       },
       cwd: options.sourceDir,
     });
