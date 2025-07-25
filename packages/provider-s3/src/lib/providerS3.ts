@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import * as clientS3 from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import type { RemoteArtifact, RemoteBuildCache } from '@rnef/tools';
@@ -74,6 +76,25 @@ export class S3BuildCache implements RemoteBuildCache {
     this.linkExpirationTime = config.linkExpirationTime ?? 3600 * 24;
   }
 
+  private async uploadFile(
+    key: string,
+    buffer: Buffer,
+    contentType?: string
+  ): Promise<void> {
+    await this.s3.send(
+      new clientS3.PutObjectCommand({
+        Bucket: this.bucket,
+        Key: key,
+        Body: buffer,
+        ContentLength: buffer.length,
+        ContentType: contentType,
+        Metadata: {
+          createdAt: new Date().toISOString(),
+        },
+      })
+    );
+  }
+
   async list({
     artifactName,
   }: {
@@ -95,7 +116,6 @@ export class S3BuildCache implements RemoteBuildCache {
 
       const name = artifactName ?? artifact.Key.split('/').pop() ?? '';
 
-      // Generate presigned URL for each artifact
       const presignedUrl = await getSignedUrl(
         this.s3,
         new clientS3.GetObjectCommand({
@@ -138,6 +158,7 @@ export class S3BuildCache implements RemoteBuildCache {
   }): Promise<RemoteArtifact[]> {
     if (skipLatest) {
       // Artifacts on S3 are unique by name, so skipping latest means we don't delete anything
+      // @todo revisit with bucket versioning
       return [];
     }
     await this.s3.send(
@@ -163,24 +184,82 @@ export class S3BuildCache implements RemoteBuildCache {
   }): Promise<RemoteArtifact> {
     const key = `${this.directory}/${artifactName}.zip`;
 
-    await this.s3.send(
-      new clientS3.PutObjectCommand({
-        Bucket: this.bucket,
-        Key: key,
-        Body: buffer,
-        ContentLength: buffer.length,
-        Metadata: {
-          createdAt: new Date().toISOString(),
-        },
-      })
-    );
+    await this.uploadFile(key, buffer);
 
-    // Generate a presigned URL for the uploaded object
     const presignedUrl = await getSignedUrl(
       this.s3,
       new clientS3.GetObjectCommand({ Bucket: this.bucket, Key: key }),
       { expiresIn: this.linkExpirationTime }
     );
+
+    return { name: artifactName, url: presignedUrl };
+  }
+
+  async uploadAdhocFolder({
+    artifactName,
+    folderPath,
+  }: {
+    artifactName: string;
+    folderPath: string;
+  }): Promise<RemoteArtifact> {
+    const uploadPromises: Promise<void>[] = [];
+
+    // Return a reference to the folder (using the first file as the main URL)
+    const firstFileKey = `${this.directory}/ad-hoc/${artifactName}`;
+    const presignedUrl = await getSignedUrl(
+      this.s3,
+      new clientS3.GetObjectCommand({ Bucket: this.bucket, Key: firstFileKey }),
+      { expiresIn: this.linkExpirationTime }
+    );
+
+    const uploadFileToFolder = async (
+      filePath: string,
+      relativePath: string
+    ) => {
+      const fileBuffer = fs.readFileSync(filePath);
+      const key = `${this.directory}/ad-hoc/${artifactName}/${relativePath}`;
+      const isHTML = filePath.endsWith('.html');
+
+      await this.uploadFile(key, fileBuffer, isHTML ? 'text/html' : undefined);
+    };
+
+    const processDirectory = (dirPath: string, relativePath: string = '') => {
+      const items = fs.readdirSync(dirPath);
+
+      for (const item of items) {
+        const fullPath = path.join(dirPath, item);
+
+        if (fullPath.endsWith('.html')) {
+          fs.writeFileSync(
+            fullPath,
+            fs
+              .readFileSync(fullPath, 'utf-8')
+              .replace('{{BASE_URL}}', presignedUrl.split('?')[0])
+          );
+        }
+        if (fullPath.endsWith('.plist')) {
+          fs.writeFileSync(
+            fullPath,
+            fs
+              .readFileSync(fullPath, 'utf-8')
+              .replace('{{BASE_URL}}', presignedUrl.split('?')[0])
+          );
+        }
+
+        const itemRelativePath = relativePath
+          ? path.join(relativePath, item)
+          : item;
+
+        if (fs.statSync(fullPath).isDirectory()) {
+          processDirectory(fullPath, itemRelativePath);
+        } else {
+          uploadPromises.push(uploadFileToFolder(fullPath, itemRelativePath));
+        }
+      }
+    };
+
+    processDirectory(folderPath);
+    await Promise.all(uploadPromises);
 
     return { name: artifactName, url: presignedUrl };
   }
