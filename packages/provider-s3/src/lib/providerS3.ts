@@ -1,4 +1,6 @@
 import * as clientS3 from '@aws-sdk/client-s3';
+import { fromIni } from '@aws-sdk/credential-provider-ini';
+import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import type { RemoteArtifact, RemoteBuildCache } from '@rnef/tools';
 import type { Readable } from 'stream';
@@ -27,13 +29,13 @@ type ProviderConfig = {
    */
   region: string;
   /**
-   * The access key ID for the S3 server.
+   * The access key ID for the S3 server. Not required when using IAM roles or other auth methods.
    */
-  accessKeyId: string;
+  accessKeyId?: string;
   /**
-   * The secret access key for the S3 server.
+   * The secret access key for the S3 server. Not required when using IAM roles or other auth methods.
    */
-  secretAccessKey: string;
+  secretAccessKey?: string;
   /**
    * The directory to store artifacts in the S3 server.
    */
@@ -46,6 +48,22 @@ type ProviderConfig = {
    * The time in seconds for the presigned URL to expire. By default, it is 24 hours.
    */
   linkExpirationTime?: number;
+  /**
+   * AWS profile name to use for authentication. Useful for local development.
+   */
+  profile?: string;
+  /**
+   * Role ARN to assume for authentication. Useful for cross-account access.
+   */
+  roleArn?: string;
+  /**
+   * Session name when assuming a role.
+   */
+  roleSessionName?: string;
+  /**
+   * External ID when assuming a role (for additional security).
+   */
+  externalId?: string;
 };
 
 export class S3BuildCache implements RemoteBuildCache {
@@ -58,14 +76,37 @@ export class S3BuildCache implements RemoteBuildCache {
 
   constructor(config: ProviderConfig) {
     this.config = config;
-    this.s3 = new clientS3.S3Client({
+
+    const s3Config: clientS3.S3ClientConfig = {
       endpoint: config.endpoint,
       region: config.region,
-      credentials: {
+    };
+
+    if (config.accessKeyId && config.secretAccessKey) {
+      s3Config.credentials = {
         accessKeyId: config.accessKeyId,
         secretAccessKey: config.secretAccessKey,
-      },
-    });
+      };
+    } else if (config.roleArn) {
+      // Use STS to assume a role
+      s3Config.credentials = fromTemporaryCredentials({
+        params: {
+          RoleArn: config.roleArn,
+          RoleSessionName: config.roleSessionName ?? 's3-build-cache-session',
+          ExternalId: config.externalId,
+        },
+        // Optional: use named profile as source credentials
+        masterCredentials: config.profile
+          ? fromIni({ profile: config.profile })
+          : undefined,
+      });
+    } else if (config.profile) {
+      // Use shared config file (e.g. ~/.aws/credentials) with a profile
+      s3Config.credentials = fromIni({ profile: config.profile });
+    }
+
+    this.s3 = new clientS3.S3Client(s3Config);
+
     const awsBucket = config.bucket ?? '';
     const bucketTokens = awsBucket.split('/');
     this.bucket = bucketTokens.shift() as string;

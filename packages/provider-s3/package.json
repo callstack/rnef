@@ -18,6 +18,8 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.830.0",
+    "@aws-sdk/credential-provider-ini": "^3.830.0",
+    "@aws-sdk/credential-providers": "^3.830.0",
     "@aws-sdk/s3-request-presigner": "^3.830.0",
     "@rnef/tools": "^0.8.6",
     "tslib": "^2.3.0"
