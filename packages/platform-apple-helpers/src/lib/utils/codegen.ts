@@ -31,7 +31,7 @@ async function runCodegen(options: CodegenOptions) {
       '-o',
       options.sourceDir,
       '-t',
-      options.platformName,
+      options.platformName === 'tvos' ? 'ios' : options.platformName,
     ]);
   } catch (error) {
     throw new RnefError('Failed to run React Native codegen script', {

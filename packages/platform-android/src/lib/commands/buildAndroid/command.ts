@@ -6,10 +6,11 @@ import { buildAndroid, options } from './buildAndroid.js';
 
 export function registerBuildCommand(
   api: PluginApi,
-  pluginConfig: AndroidProjectConfig | undefined
+  pluginConfig: AndroidProjectConfig | undefined,
+  commandName: string
 ) {
   api.registerCommand({
-    name: 'build:android',
+    name: commandName,
     description: 'Builds your app for Android platform.',
     action: async (args) => {
       const androidConfig = getValidProjectConfig(

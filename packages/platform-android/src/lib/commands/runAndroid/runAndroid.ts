@@ -235,7 +235,8 @@ async function runOnDevice({
     loader.stop(
       `Failed: installing and launching the app on ${color.bold(
         device.readableName
-      )}`
+      )}`,
+      1
     );
   }
 }

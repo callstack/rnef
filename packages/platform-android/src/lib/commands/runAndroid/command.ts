@@ -6,10 +6,11 @@ import { runAndroid, runOptions } from './runAndroid.js';
 
 export function registerRunCommand(
   api: PluginApi,
-  pluginConfig: AndroidProjectConfig | undefined
+  pluginConfig: AndroidProjectConfig | undefined,
+  commandName: string
 ) {
   api.registerCommand({
-    name: 'run:android',
+    name: commandName,
     description:
       'Builds your app and starts it on a connected Android emulator or a device.',
     action: async (args) => {

@@ -17,10 +17,11 @@ import { getValidProjectConfig } from './getValidProjectConfig.js';
 
 export function registerCreateKeystoreCommand(
   api: PluginApi,
-  pluginConfig: AndroidProjectConfig | undefined
+  pluginConfig: AndroidProjectConfig | undefined,
+  commandName: string
 ) {
   api.registerCommand({
-    name: 'create-keystore:android',
+    name: commandName,
     description: 'Creates a keystore file for signing Android release builds.',
     action: async (args) => {
       const androidConfig = getValidProjectConfig(

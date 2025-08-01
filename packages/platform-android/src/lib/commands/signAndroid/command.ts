@@ -60,9 +60,9 @@ const OPTIONS = [
   },
 ];
 
-export const registerSignCommand = (api: PluginApi) => {
+export const registerSignCommand = (api: PluginApi, commandName: string) => {
   api.registerCommand({
-    name: 'sign:android',
+    name: commandName,
     description: 'Sign the Android app with modified JS bundle.',
     args: ARGUMENTS,
     options: OPTIONS,

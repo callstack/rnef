@@ -1,0 +1,12 @@
+{
+  "name": "rnef-platform-ios-template-tv",
+  "scripts": {
+    "tvos": "rnef run:ios:tv"
+  },
+  "dependencies": {
+    "react-native": "npm:react-native-tvos@0.80.1-0"
+  },
+  "devDependencies": {
+    "@rnef/platform-ios": "^0.8.6"
+  }
+}
