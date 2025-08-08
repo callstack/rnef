@@ -1,5 +1,15 @@
 # @rnef/cli
 
+## 0.8.8
+
+### Patch Changes
+
+- 07e3239: feat: uploadAdhocFolder for providers; support S3"
+- c20aa22: fix: check for args.binaryPath before bailing with no app.tar.gz
+- Updated dependencies [07e3239]
+  - @rnef/tools@0.8.8
+  - @rnef/config@0.8.8
+
 ## 0.8.7
 
 ### Patch Changes

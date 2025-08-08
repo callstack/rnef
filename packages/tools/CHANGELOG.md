@@ -1,5 +1,11 @@
 # @rnef/tools
 
+## 0.8.8
+
+### Patch Changes
+
+- 07e3239: feat: uploadAdhocFolder for providers; support S3"
+
 ## 0.8.7
 
 ## 0.8.6
