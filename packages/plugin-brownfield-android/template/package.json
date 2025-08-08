@@ -8,6 +8,6 @@
     "@callstack/react-native-brownfield": "^1.2.0"
   },
   "devDependencies": {
-    "@rnef/plugin-brownfield-android": "^0.8.7"
+    "@rnef/plugin-brownfield-android": "^0.8.8"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@rnef/template-default",
-  "version": "0.8.7",
+  "version": "0.8.8",
   "scripts": {
     "start": "rnef start",
     "lint": "eslint .",
@@ -14,8 +14,8 @@
     "@babel/core": "^7.25.2",
     "@babel/preset-env": "^7.25.3",
     "@babel/runtime": "^7.25.0",
-    "@rnef/cli": "^0.8.7",
-    "@rnef/welcome-screen": "^0.8.7",
+    "@rnef/cli": "^0.8.8",
+    "@rnef/welcome-screen": "^0.8.8",
     "@expo/fingerprint": "^0.11.6",
     "@react-native/babel-preset": "0.80.1",
     "@react-native/eslint-config": "0.80.1",

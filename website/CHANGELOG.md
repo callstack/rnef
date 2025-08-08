@@ -1,5 +1,11 @@
 # rnef-docs
 
+## 1.0.13
+
+### Patch Changes
+
+- 07e3239: feat: uploadAdhocFolder for providers; support S3"
+
 ## 1.0.12
 
 ### Patch Changes

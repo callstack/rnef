@@ -1,5 +1,13 @@
 # @rnef/platform-apple-helpers
 
+## 0.8.8
+
+### Patch Changes
+
+- 07e3239: feat: uploadAdhocFolder for providers; support S3"
+- Updated dependencies [07e3239]
+  - @rnef/tools@0.8.8
+
 ## 0.8.7
 
 ### Patch Changes

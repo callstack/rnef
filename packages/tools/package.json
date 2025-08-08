@@ -1,6 +1,6 @@
 {
   "name": "@rnef/tools",
-  "version": "0.8.7",
+  "version": "0.8.8",
   "type": "module",
   "types": "./dist/src/index.d.ts",
   "exports": {
@@ -31,7 +31,7 @@
     "tslib": "^2.3.0"
   },
   "devDependencies": {
-    "@rnef/test-helpers": "^0.8.7"
+    "@rnef/test-helpers": "^0.8.8"
   },
   "publishConfig": {
     "access": "public"
