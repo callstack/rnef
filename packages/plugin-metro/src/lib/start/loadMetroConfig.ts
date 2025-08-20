@@ -9,7 +9,7 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 import { logger, RockError } from '@rock-js/tools';
 import type { ConfigT, InputConfigT, YargArguments } from 'metro-config';
-import { loadConfig, resolveConfig } from 'metro-config';
+import { loadConfig, mergeConfig, resolveConfig } from 'metro-config';
 import { reactNativePlatformResolver } from './metroPlatformResolver.js';
 
 export type ConfigLoadingContext = Readonly<{
@@ -89,7 +89,9 @@ export default async function loadMetroConfig(
   const require = createRequire(import.meta.url);
   let RNMetroConfig = null;
   try {
-    RNMetroConfig = require('@react-native/metro-config');
+    RNMetroConfig = await import(
+      require.resolve('@react-native/metro-config', { paths: [ctx.root] })
+    );
   } catch {
     throw new Error(
       "Cannot resolve `@react-native/metro-config`. Ensure it is listed in your project's `devDependencies`.",
@@ -104,14 +106,12 @@ export default async function loadMetroConfig(
 
   // Add our defaults to `@react-native/metro-config` before the user config
   // loads them.
-  if (typeof RNMetroConfig.setFrameworkDefaults !== 'function') {
-    throw new Error(
-      '`@react-native/metro-config` does not have the expected API. Ensure it matches your React Native version.',
+  // Available since RN 0.81
+  if (typeof RNMetroConfig.setFrameworkDefaults === 'function') {
+    RNMetroConfig.setFrameworkDefaults(
+      getCommunityCliDefaultConfig(ctx, defaultConfig),
     );
   }
-  RNMetroConfig.setFrameworkDefaults(
-    getCommunityCliDefaultConfig(ctx, defaultConfig),
-  );
   const cwd = ctx.root;
   const projectConfig = await resolveConfig(options.config, cwd);
 
@@ -137,5 +137,13 @@ This warning will be removed in future (https://github.com/facebook/metro/issues
     }
   }
 
-  return loadConfig({ cwd, ...options });
+  const config = await loadConfig({ cwd, ...options });
+
+  if (typeof RNMetroConfig.setFrameworkDefaults === 'function') {
+    return config;
+  } else {
+    // Fallback to the old API for RN < 0.81
+    const overrideConfig = getCommunityCliDefaultConfig(ctx, config);
+    return mergeConfig(config, overrideConfig);
+  }
 }
