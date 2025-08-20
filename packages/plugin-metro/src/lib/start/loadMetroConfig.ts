@@ -9,7 +9,7 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 import { logger, RockError } from '@rock-js/tools';
 import type { ConfigT, InputConfigT, YargArguments } from 'metro-config';
-import { loadConfig, mergeConfig, resolveConfig } from 'metro-config';
+import { loadConfig, resolveConfig } from 'metro-config';
 import { reactNativePlatformResolver } from './metroPlatformResolver.js';
 
 export type ConfigLoadingContext = Readonly<{
@@ -21,7 +21,7 @@ export type ConfigLoadingContext = Readonly<{
 /**
  * Get the config options to override based on RN CLI inputs.
  */
-function getOverrideConfig(
+function getCommunityCliDefaultConfig(
   ctx: ConfigLoadingContext,
   config: ConfigT,
 ): InputConfigT {
@@ -86,6 +86,32 @@ export default async function loadMetroConfig(
   },
   options: YargArguments = {},
 ): Promise<ConfigT> {
+  const require = createRequire(import.meta.url);
+  let RNMetroConfig = null;
+  try {
+    RNMetroConfig = require('@react-native/metro-config');
+  } catch {
+    throw new Error(
+      "Cannot resolve `@react-native/metro-config`. Ensure it is listed in your project's `devDependencies`.",
+    );
+  }
+
+  // Get the RN defaults before our customisations
+  const defaultConfig = RNMetroConfig.getDefaultConfig(ctx.root);
+  // Unflag the config as being loaded - it must be loaded again in userland.
+  // @ts-expect-error - overriding global
+  global.__REACT_NATIVE_METRO_CONFIG_LOADED = false;
+
+  // Add our defaults to `@react-native/metro-config` before the user config
+  // loads them.
+  if (typeof RNMetroConfig.setFrameworkDefaults !== 'function') {
+    throw new Error(
+      '`@react-native/metro-config` does not have the expected API. Ensure it matches your React Native version.',
+    );
+  }
+  RNMetroConfig.setFrameworkDefaults(
+    getCommunityCliDefaultConfig(ctx, defaultConfig),
+  );
   const cwd = ctx.root;
   const projectConfig = await resolveConfig(options.config, cwd);
 
@@ -111,8 +137,5 @@ This warning will be removed in future (https://github.com/facebook/metro/issues
     }
   }
 
-  const config = await loadConfig({ cwd, ...options });
-  const overrideConfig = getOverrideConfig(ctx, config);
-
-  return mergeConfig(config, overrideConfig);
+  return loadConfig({ cwd, ...options });
 }

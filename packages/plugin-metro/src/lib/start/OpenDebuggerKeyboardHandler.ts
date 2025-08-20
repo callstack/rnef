@@ -6,7 +6,7 @@
  */
 
 import { color } from '@rock-js/tools';
-import type { TerminalReporter } from 'metro/src/lib/TerminalReporter';
+import type { TerminalReporter } from 'metro';
 
 type PageDescription = Readonly<{
   id: string;
