@@ -73,8 +73,8 @@ importers:
   packages/cli:
     dependencies:
       '@react-native-community/cli-config':
-        specifier: ^19.1.0
-        version: 19.1.1(typescript@5.9.2)
+        specifier: ^20.0.0
+        version: 20.0.1(typescript@5.9.2)
       '@rock-js/config':
         specifier: ^0.9.1
         version: link:../config
@@ -95,8 +95,8 @@ importers:
         version: 2.8.1
     devDependencies:
       '@react-native-community/cli-types':
-        specifier: ^19.1.0
-        version: 19.1.1
+        specifier: ^20.0.0
+        version: 20.0.1
       '@types/adm-zip':
         specifier: ^0.5.7
         version: 0.5.7
@@ -160,8 +160,8 @@ importers:
   packages/platform-android:
     dependencies:
       '@react-native-community/cli-config-android':
-        specifier: ^19.1.0
-        version: 19.1.1
+        specifier: ^20.0.0
+        version: 20.0.1
       '@rock-js/tools':
         specifier: ^0.9.1
         version: link:../tools
@@ -173,8 +173,8 @@ importers:
         version: 2.8.1
     devDependencies:
       '@react-native-community/cli-types':
-        specifier: ^19.1.0
-        version: 19.1.1
+        specifier: ^20.0.0
+        version: 20.0.1
       '@rock-js/config':
         specifier: ^0.9.1
         version: link:../config
@@ -185,11 +185,11 @@ importers:
   packages/platform-apple-helpers:
     dependencies:
       '@react-native-community/cli-config':
-        specifier: ^19.1.0
-        version: 19.1.1(typescript@5.9.2)
+        specifier: ^20.0.0
+        version: 20.0.1(typescript@5.9.2)
       '@react-native-community/cli-config-apple':
-        specifier: ^19.1.0
-        version: 19.1.1
+        specifier: ^20.0.0
+        version: 20.0.1
       '@rock-js/tools':
         specifier: ^0.9.1
         version: link:../tools
@@ -210,8 +210,8 @@ importers:
         version: 2.8.1
     devDependencies:
       '@react-native-community/cli-types':
-        specifier: ^19.1.0
-        version: 19.1.1
+        specifier: ^20.0.0
+        version: 20.0.1
       '@rock-js/config':
         specifier: ^0.9.1
         version: link:../config
@@ -219,11 +219,11 @@ importers:
   packages/platform-ios:
     dependencies:
       '@react-native-community/cli-config-apple':
-        specifier: ^19.1.0
-        version: 19.1.1
+        specifier: ^20.0.0
+        version: 20.0.1
       '@react-native-community/cli-types':
-        specifier: ^19.1.0
-        version: 19.1.1
+        specifier: ^20.0.0
+        version: 20.0.1
       '@rock-js/platform-apple-helpers':
         specifier: ^0.9.1
         version: link:../platform-apple-helpers
@@ -241,8 +241,8 @@ importers:
   packages/plugin-brownfield-android:
     dependencies:
       '@react-native-community/cli-config-android':
-        specifier: ^19.1.0
-        version: 19.1.1
+        specifier: ^20.0.0
+        version: 20.0.1
       '@rock-js/platform-android':
         specifier: ^0.9.1
         version: link:../platform-android
@@ -254,8 +254,8 @@ importers:
         version: 2.8.1
     devDependencies:
       '@react-native-community/cli-types':
-        specifier: ^19.1.0
-        version: 19.1.1
+        specifier: ^20.0.0
+        version: 20.0.1
       '@rock-js/config':
         specifier: ^0.9.1
         version: link:../config
@@ -263,11 +263,11 @@ importers:
   packages/plugin-brownfield-ios:
     dependencies:
       '@react-native-community/cli-config-apple':
-        specifier: ^19.1.0
-        version: 19.1.1
+        specifier: ^20.0.0
+        version: 20.0.1
       '@react-native-community/cli-types':
-        specifier: ^19.1.0
-        version: 19.1.1
+        specifier: ^20.0.0
+        version: 20.0.1
       '@rock-js/platform-apple-helpers':
         specifier: ^0.9.1
         version: link:../platform-apple-helpers
@@ -285,8 +285,8 @@ importers:
   packages/plugin-metro:
     dependencies:
       '@react-native-community/cli-server-api':
-        specifier: ^19.1.0
-        version: 19.1.1
+        specifier: ^20.0.0
+        version: 20.0.1
       '@rock-js/tools':
         specifier: ^0.9.1
         version: link:../tools
@@ -1742,23 +1742,23 @@ packages:
   '@polka/url@1.0.0-next.29':
     resolution: {integrity: sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==}
 
-  '@react-native-community/cli-config-android@19.1.1':
-    resolution: {integrity: sha512-uAUXU/BPuasBy7For5lvVEpxiwA29X5BWKjM4fgxWmsQhaZHW//6PNRep94w3WVnAp+CUbW6+o3SzFqMX0PdIw==}
+  '@react-native-community/cli-config-android@20.0.1':
+    resolution: {integrity: sha512-2Opfc38FZq2chMXUSY75Fzcgwe2G96sd1O4sAkq7UeoP6HGjAT2hh4xu3lzTmevUhS0T5EzIDUdYT55wTJf60A==}
 
-  '@react-native-community/cli-config-apple@19.1.1':
-    resolution: {integrity: sha512-dKS7pg5eAEgRB8sOWYpr6XCR/3xUcttHNsuYYbuMXfY9d0M3d0oGquuMOW/p3Ri9sJI16bRAs/YIXDF2m4gYIA==}
+  '@react-native-community/cli-config-apple@20.0.1':
+    resolution: {integrity: sha512-gtNRlNQxhA57y3vRxjTkHPusLEkLQqqkHOOE0LLeTuMQ/X8q0tdPKfFjdHDXSwjz4wXkDN327kxTPx0UPqohhg==}
 
-  '@react-native-community/cli-config@19.1.1':
-    resolution: {integrity: sha512-qGLYCFf3whCa/we3iKd5BY4RlcAUhSykwGpnJpjseXLaI5iJzIn/IMd70EBG8QvhV/KQxM7VFMQj6KgGcoNKYg==}
+  '@react-native-community/cli-config@20.0.1':
+    resolution: {integrity: sha512-DMjbgqFcWlCmoDAn9CgcPoEMMfRE0HgCECAeVvby+DOtcses/QxTPX1L9s2hZU16AOUSNxZEXqLzAw7pqGJl0A==}
 
-  '@react-native-community/cli-server-api@19.1.1':
-    resolution: {integrity: sha512-p0FFm82uPrtLZBWTD3bZ43mMBIV5mXwvGFYMcsfGiuMoS9SNbw4ImEFTG2IutVpr7Qb6NMjx6SbgYYMnTdZXmw==}
+  '@react-native-community/cli-server-api@20.0.1':
+    resolution: {integrity: sha512-x5wr71LJzVBGLVLFPU9iGBkY1Raw2RCd1KDKKnbYMbX/KiAgYnhW3flF0RIX+LpIkdZ8hIIcj7SETaByAAR1FA==}
 
-  '@react-native-community/cli-tools@19.1.1':
-    resolution: {integrity: sha512-0yWOdrfgO7jVtYzhNcm9hTA1hqrD6haqDaesFq4d3YCmh8lkkTb61Q/kNIKQCUfaCTR/Qcc4mdwy6ObdXRoTIQ==}
+  '@react-native-community/cli-tools@20.0.1':
+    resolution: {integrity: sha512-yrSOkVfGm8yG88DRc4DjfM4XFmRpIXGkB1StKfU8aUPzO5Pbp8cobYYdsCeK234vp9/SZu535uRrno6Or53+Jw==}
 
-  '@react-native-community/cli-types@19.1.1':
-    resolution: {integrity: sha512-rOGiYjeDM9tkYBEuK6TJrnxpMhmaId1Un8pjQJswz7W9w2Vb6+nnLfWja7X7VmDIvqIK5GhVobRHsmKCKIdDEA==}
+  '@react-native-community/cli-types@20.0.1':
+    resolution: {integrity: sha512-nvIk3axp9gXyZ3Ri4UrfiCam8bYWOL0z4B1pOhSKW/9wrg2v2E9SK27xf3GZGAP/XuWKT7tuyRWHx1KZEQsfkg==}
 
   '@react-native/assets-registry@0.81.0':
     resolution: {integrity: sha512-rZs8ziQ1YRV3Z5Mw5AR7YcgI3q1Ya9NIx6nyuZAT9wDSSjspSi+bww+Hargh/a4JfV2Ajcxpn9X9UiFJr1ddPw==}
@@ -3387,10 +3387,6 @@ packages:
     resolution: {integrity: sha512-AF3r7P5dWxL8MxyITRMlORQNaOA2IkAFaTr4k7BUumjPtRpGDTZpl0Pb1XCO6JeDCBdp126Cgs9sMxqSjgYyRg==}
     engines: {node: '>= 0.6'}
 
-  compression@1.7.5:
-    resolution: {integrity: sha512-bQJ0YRck5ak3LgtnpKkiabX5pNF7tMUh1BSy2ZBOTh0Dim0BUu6aPPwByIns6/A5Prh8PufSPerMDUklpzes2Q==}
-    engines: {node: '>= 0.8.0'}
-
   compression@1.8.1:
     resolution: {integrity: sha512-9mAqGPHLakhCLeNyxPkK4xVo746zQ/czLH1Ky+vkitMnWfWZps8r0qXuwhwizagCRttsL4lfG4pIOvaWLpAP0w==}
     engines: {node: '>= 0.8.0'}
@@ -3913,10 +3909,6 @@ packages:
   fast-uri@3.0.6:
     resolution: {integrity: sha512-Atfo14OibSv5wAp4VWNsFYE1AchQRTv9cBGWET4pZWHzYshFSS9NQI6I57rdKn9croWVMbYFbLhJ+yJvmZIIHw==}
 
-  fast-xml-parser@4.5.1:
-    resolution: {integrity: sha512-y655CeyUQ+jj7KBbYMc4FG01V8ZQqjN+gDYGJ50RtfsUB8iG9AmwmwoAgeKLJdmueKKMrH1RJ7yXHTSoczdv5w==}
-    hasBin: true
-
   fast-xml-parser@4.5.3:
     resolution: {integrity: sha512-RKihhV+SHsIUGXObeVy9AXiBbFwkVk7Syp8XgwN5U3JV416+Gwp/GO9i0JYKmikykgz/UHRrrV4ROuZEo/T0ig==}
     hasBin: true
@@ -4311,10 +4303,6 @@ packages:
   import-fresh@2.0.0:
     resolution: {integrity: sha512-eZ5H8rcgYazHbKC3PG4ClHNykCSxtAhxSSEM+2mb+7evD2CKF5V7c0dNum7AdpDh0ZdICwZY9sRSn8f+KH96sg==}
     engines: {node: '>=4'}
-
-  import-fresh@3.3.0:
-    resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}
-    engines: {node: '>=6'}
 
   import-fresh@3.3.1:
     resolution: {integrity: sha512-TR3KfrTZTYLPB6jUjfx6MF9WcWrHL9su5TObK4ZkYgBdWKPOFoSoQIdEuTuR82pmtxH2spWG9h6etwfr1pLBqQ==}
@@ -5355,10 +5343,6 @@ packages:
     resolution: {integrity: sha512-oVlzkg3ENAhCk2zdv7IJwd/QUD4z2RxRwpkcGY8psCVcCYZNq4wYnVWALHM+brtuJjePWiYF/ClmuDr8Ch5+kg==}
     engines: {node: '>= 0.8'}
 
-  on-headers@1.0.2:
-    resolution: {integrity: sha512-pZAE+FJLoyITytdqK0U5s+FIpjN0JP3OzFi/u8Rx+EV5/W+JTWGXG8xFzevE7AjBfDqHv/8vL8qQsIhHnqRkrA==}
-    engines: {node: '>= 0.8'}
-
   on-headers@1.1.0:
     resolution: {integrity: sha512-737ZY3yNnXy37FHkQxPzt4UZ2UWPWiCZWLvFZ4fu5cueciegX0zGPnrlY6bwRg4FdQOe9YU8MkmJwGhoMybl8A==}
     engines: {node: '>= 0.8'}
@@ -6352,9 +6336,6 @@ packages:
 
   strip-literal@3.0.0:
     resolution: {integrity: sha512-TcccoMhJOM3OebGhSBEmp3UZ2SfDMZUEBdRA/9ynfLi8yYajyWX3JiXArcJt4Umh4vISpspkQIY8ZZoCqjbviA==}
-
-  strnum@1.0.5:
-    resolution: {integrity: sha512-J8bbNyKKXl5qYcR36TIO8W3mVGVHrmmxsd5PAItGkmyzwJvybiw2IVq5nqd0i4LSNSkB/sx9VHllbfFdr9k1JA==}
 
   strnum@1.1.2:
     resolution: {integrity: sha512-vrN+B7DBIoTTZjnPNewwhx6cBA/H+IS7rfW68n7XxC1y7uoiGQBxaKzqucGUgavX15dJgiGztLJ8vxuEzwqBdA==}
@@ -9006,23 +8987,23 @@ snapshots:
 
   '@polka/url@1.0.0-next.29': {}
 
-  '@react-native-community/cli-config-android@19.1.1':
+  '@react-native-community/cli-config-android@20.0.1':
     dependencies:
-      '@react-native-community/cli-tools': 19.1.1
+      '@react-native-community/cli-tools': 20.0.1
       chalk: 4.1.2
       fast-glob: 3.3.3
-      fast-xml-parser: 4.5.1
+      fast-xml-parser: 4.5.3
 
-  '@react-native-community/cli-config-apple@19.1.1':
+  '@react-native-community/cli-config-apple@20.0.1':
     dependencies:
-      '@react-native-community/cli-tools': 19.1.1
+      '@react-native-community/cli-tools': 20.0.1
       chalk: 4.1.2
       execa: 5.1.1
       fast-glob: 3.3.3
 
-  '@react-native-community/cli-config@19.1.1(typescript@5.9.2)':
+  '@react-native-community/cli-config@20.0.1(typescript@5.9.2)':
     dependencies:
-      '@react-native-community/cli-tools': 19.1.1
+      '@react-native-community/cli-tools': 20.0.1
       chalk: 4.1.2
       cosmiconfig: 9.0.0(typescript@5.9.2)
       deepmerge: 4.3.1
@@ -9031,16 +9012,16 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  '@react-native-community/cli-server-api@19.1.1':
+  '@react-native-community/cli-server-api@20.0.1':
     dependencies:
-      '@react-native-community/cli-tools': 19.1.1
+      '@react-native-community/cli-tools': 20.0.1
       body-parser: 1.20.3
-      compression: 1.7.5
+      compression: 1.8.1
       connect: 3.7.0
       errorhandler: 1.5.1
       nocache: 3.0.4
       open: 6.4.0
-      pretty-format: 26.6.2
+      pretty-format: 29.7.0
       serve-static: 1.16.2
       ws: 6.2.3
     transitivePeerDependencies:
@@ -9048,7 +9029,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@react-native-community/cli-tools@19.1.1':
+  '@react-native-community/cli-tools@20.0.1':
     dependencies:
       '@vscode/sudo-prompt': 9.3.1
       appdirsjs: 1.2.7
@@ -9061,7 +9042,7 @@ snapshots:
       prompts: 2.4.2
       semver: 7.7.2
 
-  '@react-native-community/cli-types@19.1.1':
+  '@react-native-community/cli-types@20.0.1':
     dependencies:
       joi: 17.13.3
 
@@ -11087,18 +11068,6 @@ snapshots:
     dependencies:
       mime-db: 1.54.0
 
-  compression@1.7.5:
-    dependencies:
-      bytes: 3.1.2
-      compressible: 2.0.18
-      debug: 2.6.9
-      negotiator: 0.6.4
-      on-headers: 1.0.2
-      safe-buffer: 5.2.1
-      vary: 1.1.2
-    transitivePeerDependencies:
-      - supports-color
-
   compression@1.8.1:
     dependencies:
       bytes: 3.1.2
@@ -11172,7 +11141,7 @@ snapshots:
   cosmiconfig@9.0.0(typescript@5.9.2):
     dependencies:
       env-paths: 2.2.1
-      import-fresh: 3.3.0
+      import-fresh: 3.3.1
       js-yaml: 4.1.0
       parse-json: 5.2.0
     optionalDependencies:
@@ -11669,10 +11638,6 @@ snapshots:
   fast-uri@2.4.0: {}
 
   fast-uri@3.0.6: {}
-
-  fast-xml-parser@4.5.1:
-    dependencies:
-      strnum: 1.0.5
 
   fast-xml-parser@4.5.3:
     dependencies:
@@ -12214,11 +12179,6 @@ snapshots:
     dependencies:
       caller-path: 2.0.0
       resolve-from: 3.0.0
-
-  import-fresh@3.3.0:
-    dependencies:
-      parent-module: 1.0.1
-      resolve-from: 4.0.0
 
   import-fresh@3.3.1:
     dependencies:
@@ -13778,8 +13738,6 @@ snapshots:
     dependencies:
       ee-first: 1.1.1
 
-  on-headers@1.0.2: {}
-
   on-headers@1.1.0: {}
 
   once@1.4.0:
@@ -14958,8 +14916,6 @@ snapshots:
   strip-literal@3.0.0:
     dependencies:
       js-tokens: 9.0.1
-
-  strnum@1.0.5: {}
 
   strnum@1.1.2: {}
 

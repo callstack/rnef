@@ -21,12 +21,12 @@
   "dependencies": {
     "@rock-js/tools": "^0.9.1",
     "@rock-js/platform-android": "^0.9.1",
-    "@react-native-community/cli-config-android": "^19.1.0",
+    "@react-native-community/cli-config-android": "^20.0.0",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
     "@rock-js/config": "^0.9.1",
-    "@react-native-community/cli-types": "^19.1.0"
+    "@react-native-community/cli-types": "^20.0.0"
   },
   "publishConfig": {
     "access": "restricted"

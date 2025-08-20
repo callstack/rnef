@@ -19,13 +19,13 @@
     "publish:verdaccio": "npm publish --registry http://localhost:4873 --userconfig ../../.npmrc"
   },
   "dependencies": {
-    "@react-native-community/cli-config-android": "^19.1.0",
+    "@react-native-community/cli-config-android": "^20.0.0",
     "@rock-js/tools": "^0.9.1",
     "adm-zip": "^0.5.16",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
-    "@react-native-community/cli-types": "^19.1.0",
+    "@react-native-community/cli-types": "^20.0.0",
     "@rock-js/config": "^0.9.1",
     "@types/adm-zip": "^0.5.7"
   },
