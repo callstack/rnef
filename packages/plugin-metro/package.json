@@ -18,17 +18,17 @@
     "publish:verdaccio": "npm publish --registry http://localhost:4873 --userconfig ../../.npmrc"
   },
   "dependencies": {
-    "@react-native-community/cli-server-api": "^19.1.0",
+    "@react-native-community/cli-server-api": "^20.0.0",
     "@rock-js/tools": "^0.9.1",
-    "metro": "^0.82.2",
-    "metro-config": "^0.82.2",
-    "metro-core": "^0.82.2",
-    "metro-resolver": "^0.82.2",
+    "metro": "^0.83.1",
+    "metro-config": "^0.83.1",
+    "metro-core": "^0.83.1",
+    "metro-resolver": "^0.83.1",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
-    "@react-native/dev-middleware": "^0.80.1",
-    "@react-native/community-cli-plugin": "0.80.1",
+    "@react-native/dev-middleware": "^0.81.0",
+    "@react-native/community-cli-plugin": "0.81.0",
     "@rock-js/config": "^0.9.1"
   },
   "peerDependencies": {

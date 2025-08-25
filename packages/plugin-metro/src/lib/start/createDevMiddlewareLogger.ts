@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import type { TerminalReporter } from 'metro/src/lib/TerminalReporter';
+import type { TerminalReporter } from 'metro';
 
 type LoggerFn = (...message: ReadonlyArray<string>) => void;
 

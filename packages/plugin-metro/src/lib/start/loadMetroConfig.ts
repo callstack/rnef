@@ -21,7 +21,7 @@ export type ConfigLoadingContext = Readonly<{
 /**
  * Get the config options to override based on RN CLI inputs.
  */
-function getOverrideConfig(
+function getCommunityCliDefaultConfig(
   ctx: ConfigLoadingContext,
   config: ConfigT,
 ): InputConfigT {
@@ -86,6 +86,32 @@ export default async function loadMetroConfig(
   },
   options: YargArguments = {},
 ): Promise<ConfigT> {
+  const require = createRequire(import.meta.url);
+  let RNMetroConfig = null;
+  try {
+    RNMetroConfig = await import(
+      require.resolve('@react-native/metro-config', { paths: [ctx.root] })
+    );
+  } catch {
+    throw new Error(
+      "Cannot resolve `@react-native/metro-config`. Ensure it is listed in your project's `devDependencies`.",
+    );
+  }
+
+  // Get the RN defaults before our customisations
+  const defaultConfig = RNMetroConfig.getDefaultConfig(ctx.root);
+  // Unflag the config as being loaded - it must be loaded again in userland.
+  // @ts-expect-error - overriding global
+  global.__REACT_NATIVE_METRO_CONFIG_LOADED = false;
+
+  // Add our defaults to `@react-native/metro-config` before the user config
+  // loads them.
+  // Available since RN 0.81
+  if (typeof RNMetroConfig.setFrameworkDefaults === 'function') {
+    RNMetroConfig.setFrameworkDefaults(
+      getCommunityCliDefaultConfig(ctx, defaultConfig),
+    );
+  }
   const cwd = ctx.root;
   const projectConfig = await resolveConfig(options.config, cwd);
 
@@ -112,7 +138,12 @@ This warning will be removed in future (https://github.com/facebook/metro/issues
   }
 
   const config = await loadConfig({ cwd, ...options });
-  const overrideConfig = getOverrideConfig(ctx, config);
 
-  return mergeConfig(config, overrideConfig);
+  if (typeof RNMetroConfig.setFrameworkDefaults === 'function') {
+    return config;
+  } else {
+    // Fallback to the old API for RN < 0.81
+    const overrideConfig = getCommunityCliDefaultConfig(ctx, config);
+    return mergeConfig(config, overrideConfig);
+  }
 }

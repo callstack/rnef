@@ -8,7 +8,7 @@
 import readline from 'node:readline';
 import { ReadStream } from 'node:tty';
 import { color, RockError } from '@rock-js/tools';
-import type { TerminalReporter } from 'metro/src/lib/TerminalReporter';
+import type { TerminalReporter } from 'metro';
 import OpenDebuggerKeyboardHandler from './OpenDebuggerKeyboardHandler.js';
 
 const CTRL_C = '\u0003';

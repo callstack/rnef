@@ -68,8 +68,8 @@ publishing {
 }
 
 dependencies {
-    api("com.facebook.react:react-android:0.80.1")
-    api("com.facebook.react:hermes-android:0.80.1")
+    api("com.facebook.react:react-android:0.81.0")
+    api("com.facebook.react:hermes-android:0.81.0")
 }
 
 val moduleBuildDir: Directory = layout.buildDirectory.get()
