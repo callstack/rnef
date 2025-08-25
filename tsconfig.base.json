@@ -36,7 +36,10 @@
       ],
       "@rock-js/provider-github": ["packages/provider-github/dist/src/index"],
       "@rock-js/provider-s3": ["packages/provider-s3/dist/src/index"],
-      "@rock-js/welcome-screen": ["packages/welcome-screen/dist/src/index"]
+      "@rock-js/welcome-screen": ["packages/welcome-screen/dist/src/index"],
+      "@rock-js/plugin-expo-config-plugins": [
+        "packages/plugin-expo-config-plugins/dist/src/index"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]
