@@ -6,6 +6,7 @@
   "scripts": {
     "build": "pnpm -r run build",
     "test": "vitest run",
+    "test:watch": "vitest watch",
     "e2e": "pnpm -r run e2e",
     "lint": "eslint .",
     "prettier": "prettier --write .",

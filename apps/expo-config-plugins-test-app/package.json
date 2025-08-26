@@ -1,0 +1,43 @@
+{
+  "name": "expo-config-plugins-test-app",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "rnef start",
+    "lint": "eslint .",
+    "test": "jest",
+    "android": "rnef run:android",
+    "ios": "rnef run:ios"
+  },
+  "dependencies": {
+    "react": "19.1.0",
+    "react-native": "0.80.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.3",
+    "@babel/runtime": "^7.25.0",
+    "@expo/fingerprint": "^0.11.6",
+    "@react-native/babel-preset": "0.80.1",
+    "@react-native/eslint-config": "0.80.1",
+    "@react-native/metro-config": "0.80.1",
+    "@react-native/typescript-config": "0.80.1",
+    "@rnef/cli": "^0.8.13",
+    "@rnef/platform-android": "^0.8.13",
+    "@rnef/platform-ios": "^0.8.13",
+    "@rnef/plugin-metro": "^0.8.13",
+    "@rnef/welcome-screen": "^0.8.13",
+    "@types/react": "^19.1.0",
+    "@types/react-test-renderer": "^19.1.0",
+    "babel-jest": "^29.6.3",
+    "eslint": "^8.19.0",
+    "jest": "^29.6.3",
+    "prettier": "2.8.8",
+    "react-test-renderer": "19.1.0",
+    "typescript": "5.0.4"
+  },
+  "peerDependencies": {},
+  "engines": {
+    "node": ">=18"
+  }
+}

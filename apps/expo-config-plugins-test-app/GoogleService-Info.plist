@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>test_api_key</string>
+	<key>TRACKING_ID</key>
+	<string>test_tracking_id</string>
+	<key>CLIENT_ID</key>
+	<string>test_client_id</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>test_reversed_client_id</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>test_android_client_id</string>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:123:ios:123abc</string>
+	<key>GCM_SENDER_ID</key>
+	<string>test_gcm_sender_id</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>dev.rockjs.expo-config-plugins-test-app</string>
+	<key>PROJECT_ID</key>
+	<string>expo-config-plugins-test-app</string>
+	<key>DATABASE_URL</key>
+	<string>https://expo-config-plugins-test-app.firebaseio.com</string>
+	<key>STORAGE_BUCKET</key>
+	<string>expo-config-plugins-test-app.storage.firebase.com</string>
+</dict>
+</plist>
