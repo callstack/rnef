@@ -26,7 +26,7 @@ export type PluginApi = {
   getRemoteCacheProvider: () => Promise<
     null | undefined | (() => RemoteBuildCache)
   >;
-  getFingerprintOptions: () => FingerprintSources;
+  getFingerprintOptions: () => FingerprintSources & { env?: string[] };
 };
 
 type PluginType = (args: PluginApi) => PluginOutput;
@@ -71,6 +71,7 @@ export type ConfigType = {
   fingerprint?: {
     extraSources?: string[];
     ignorePaths?: string[];
+    env?: string[];
   };
 };
 
@@ -177,7 +178,7 @@ export async function getConfig(
       return validatedConfig.remoteCacheProvider;
     },
     getFingerprintOptions: () =>
-      validatedConfig.fingerprint as FingerprintSources,
+      validatedConfig.fingerprint as FingerprintSources & { env?: string[] },
   };
 
   const platforms: Record<string, PlatformOutput> = {};
@@ -254,8 +255,6 @@ function assignOriginToCommand(
   const { name } = plugin(api);
   const newlen = config.commands?.length ?? 0;
   for (let i = len; i < newlen; i++) {
-    if (config.commands?.[i]) {
-      config.commands[i].__origin = name;
-    }
+    config.commands![i].__origin = name;
   }
 }
