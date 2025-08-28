@@ -1,5 +1,13 @@
 # create-rock
 
+## 0.9.3
+
+### Patch Changes
+
+- 06f8882: fix(create-app): get package manager from lock correctly
+- da39f42: fix(init): change order or appIdSuffix
+  - @rock-js/tools@0.9.3
+
 ## 0.9.2
 
 ### Patch Changes

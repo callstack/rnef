@@ -1,6 +1,6 @@
 {
   "name": "@rock-js/plugin-metro",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "type": "module",
   "types": "./dist/src/index.d.ts",
   "exports": {
@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@react-native-community/cli-server-api": "^19.1.0",
-    "@rock-js/tools": "^0.9.2",
+    "@rock-js/tools": "^0.9.3",
     "metro": "^0.82.2",
     "metro-config": "^0.82.2",
     "metro-core": "^0.82.2",
@@ -29,7 +29,7 @@
   "devDependencies": {
     "@react-native/dev-middleware": "^0.80.1",
     "@react-native/community-cli-plugin": "0.80.1",
-    "@rock-js/config": "^0.9.2"
+    "@rock-js/config": "^0.9.3"
   },
   "peerDependencies": {
     "@react-native/community-cli-plugin": "*"

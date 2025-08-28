@@ -1,6 +1,6 @@
 {
   "name": "@rock-js/platform-ios",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "type": "module",
   "types": "./dist/src/index.d.ts",
   "exports": {
@@ -21,12 +21,12 @@
   "dependencies": {
     "@react-native-community/cli-config-apple": "^19.1.0",
     "@react-native-community/cli-types": "^19.1.0",
-    "@rock-js/platform-apple-helpers": "^0.9.2",
-    "@rock-js/tools": "^0.9.2",
+    "@rock-js/platform-apple-helpers": "^0.9.3",
+    "@rock-js/tools": "^0.9.3",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
-    "@rock-js/config": "^0.9.2"
+    "@rock-js/config": "^0.9.3"
   },
   "publishConfig": {
     "access": "public"

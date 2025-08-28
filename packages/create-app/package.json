@@ -1,6 +1,6 @@
 {
   "name": "create-rock",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "type": "module",
   "types": "./dist/src/index.d.ts",
   "exports": {
@@ -21,7 +21,7 @@
     "create-rock": "./dist/src/bin.js"
   },
   "dependencies": {
-    "@rock-js/tools": "^0.9.2",
+    "@rock-js/tools": "^0.9.3",
     "gradient-string": "^3.0.0",
     "minimist": "^1.2.8",
     "package-json": "^10.0.1",
@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@types/gradient-string": "^1.1.6",
-    "@rock-js/test-helpers": "^0.9.2",
+    "@rock-js/test-helpers": "^0.9.3",
     "@types/minimist": "^1.2.5"
   },
   "publishConfig": {
