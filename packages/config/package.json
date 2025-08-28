@@ -1,6 +1,6 @@
 {
   "name": "@rock-js/config",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "type": "module",
   "types": "./dist/src/index.d.ts",
   "exports": {
@@ -18,8 +18,8 @@
   },
   "dependencies": {
     "@babel/code-frame": "^7.26.2",
-    "@rock-js/provider-github": "^0.9.2",
-    "@rock-js/tools": "^0.9.2",
+    "@rock-js/provider-github": "^0.9.3",
+    "@rock-js/tools": "^0.9.3",
     "joi": "^17.13.3",
     "tslib": "^2.3.0"
   },
@@ -28,6 +28,6 @@
   },
   "devDependencies": {
     "@types/babel__code-frame": "^7.0.6",
-    "@rock-js/test-helpers": "^0.9.2"
+    "@rock-js/test-helpers": "^0.9.3"
   }
 }

@@ -1,5 +1,12 @@
 # @rnef/plugin-repack
 
+## 0.9.3
+
+### Patch Changes
+
+- 0fbf8c9: chore: update Re.Pack template
+  - @rock-js/tools@0.9.3
+
 ## 0.9.2
 
 ### Patch Changes

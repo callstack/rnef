@@ -1,6 +1,6 @@
 {
   "name": "@rock-js/platform-android",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "type": "module",
   "types": "./dist/src/index.d.ts",
   "exports": {
@@ -20,13 +20,13 @@
   },
   "dependencies": {
     "@react-native-community/cli-config-android": "^19.1.0",
-    "@rock-js/tools": "^0.9.2",
+    "@rock-js/tools": "^0.9.3",
     "adm-zip": "^0.5.16",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
     "@react-native-community/cli-types": "^19.1.0",
-    "@rock-js/config": "^0.9.2",
+    "@rock-js/config": "^0.9.3",
     "@types/adm-zip": "^0.5.7"
   },
   "publishConfig": {

@@ -1,6 +1,6 @@
 {
   "name": "@rock-js/provider-s3",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "type": "module",
   "types": "./dist/src/index.d.ts",
   "exports": {
@@ -22,7 +22,7 @@
     "@aws-sdk/credential-providers": "^3.830.0",
     "@aws-sdk/lib-storage": "^3.830.0",
     "@aws-sdk/s3-request-presigner": "^3.830.0",
-    "@rock-js/tools": "^0.9.2",
+    "@rock-js/tools": "^0.9.3",
     "tslib": "^2.3.0"
   },
   "publishConfig": {
