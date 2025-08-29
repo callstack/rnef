@@ -4,6 +4,7 @@ import { color } from '../color.js';
 import type { FingerprintSources } from '../fingerprint/index.js';
 import { nativeFingerprint } from '../fingerprint/index.js';
 import { isInteractive } from '../isInteractive.js';
+import logger from '../logger.js';
 import { getCacheRootPath } from '../project.js';
 import { spinner } from '../prompts.js';
 
@@ -104,12 +105,14 @@ export async function formatArtifactName({
   root,
   fingerprintOptions,
   raw,
+  silent,
 }: {
   platform?: 'ios' | 'android';
   traits?: string[];
   root: string;
   fingerprintOptions: FingerprintSources;
   raw?: boolean;
+  silent?: boolean;
 }): Promise<string> {
   if (!platform || !traits) {
     return '';
@@ -123,7 +126,7 @@ export async function formatArtifactName({
     return `rock-${platform}-${traits.join('-')}-${hash}`;
   }
 
-  const loader = spinner();
+  const loader = spinner({ silent });
   loader.start('Calculating project fingerprint');
   const { hash } = await nativeFingerprint(root, {
     ...fingerprintOptions,
@@ -132,6 +135,9 @@ export async function formatArtifactName({
   loader.stop(
     `Calculated project fingerprint: ${color.bold(color.magenta(hash))}`,
   );
+  if (silent) {
+    logger.debug(`Calculated project fingerprint: ${hash}`);
+  }
   return `rock-${platform}-${traits.join('-')}-${hash}`;
 }
 

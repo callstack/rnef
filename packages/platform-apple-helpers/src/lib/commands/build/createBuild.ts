@@ -52,12 +52,19 @@ export const createBuild = async ({
       ? 'simulator'
       : 'device'
     : 'simulator';
-  const artifactName = await formatArtifactName({
-    platform: 'ios',
-    traits: [deviceOrSimulator, args.configuration ?? 'Debug'],
-    root: projectRoot,
-    fingerprintOptions,
-  });
+
+  async function getArtifactName({ silent }: { silent?: boolean } = {}) {
+    return await formatArtifactName({
+      platform: 'ios',
+      traits: [deviceOrSimulator, args.configuration ?? 'Debug'],
+      root: projectRoot,
+      fingerprintOptions,
+      silent,
+    });
+  }
+
+  let artifactName = await getArtifactName();
+
   const binaryPath = await getBinaryPath({
     artifactName,
     localFlag: args.local,
@@ -82,7 +89,7 @@ export const createBuild = async ({
   }
 
   try {
-    const { appPath, ...buildAppResult } = await buildApp({
+    const { appPath, didInstallPods, ...buildAppResult } = await buildApp({
       projectRoot,
       projectConfig,
       platformName,
@@ -95,6 +102,12 @@ export const createBuild = async ({
     xcodeProject = buildAppResult.xcodeProject;
     sourceDir = buildAppResult.sourceDir;
     scheme = buildAppResult.scheme;
+
+    // After installing pods the fingerprint likely changes.
+    // We update the artifact name to reflect the new fingerprint and store proper entry in the local cache.
+    if (didInstallPods) {
+      artifactName = await getArtifactName({ silent: true });
+    }
     saveLocalBuildCache(artifactName, appPath);
   } catch (error) {
     const message = `Failed to create ${args.archive ? 'archive' : 'build'}`;

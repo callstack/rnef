@@ -22,6 +22,7 @@ export const DEFAULT_IGNORE_PATHS = [
   'ios/DerivedData',
   'ios/Pods',
   'ios/tmp.xcconfig', // added by react-native-config
+  'ios/**/*.xcworkspace',
   'node_modules',
   'android/local.properties',
   'android/.idea',
@@ -48,7 +49,7 @@ export type FingerprintResult = {
  * Calculates the fingerprint of the native parts project of the project.
  */
 export async function nativeFingerprint(
-  path: string,
+  projectRoot: string,
   options: FingerprintOptions,
 ): Promise<FingerprintResult> {
   const platform = options.platform;
@@ -56,7 +57,7 @@ export async function nativeFingerprint(
   const { stdout: autolinkingConfigString } = await spawn(
     'rock',
     ['config', '-p', options.platform],
-    { cwd: path, stdio: 'pipe', preferLocal: true },
+    { cwd: projectRoot, stdio: 'pipe', preferLocal: true },
   );
 
   const autolinkingSources = parseAutolinkingSources({
@@ -65,14 +66,17 @@ export async function nativeFingerprint(
     contentsId: 'rncoreAutolinkingConfig',
   });
 
-  const fingerprint = await createFingerprintAsync(path, {
+  const fingerprint = await createFingerprintAsync(projectRoot, {
     platforms: [platform],
-    dirExcludes: DEFAULT_IGNORE_PATHS,
     extraSources: [
       ...autolinkingSources,
-      ...processExtraSources(options.extraSources, path, options.ignorePaths),
+      ...processExtraSources(
+        options.extraSources,
+        projectRoot,
+        options.ignorePaths,
+      ),
     ],
-    ignorePaths: options.ignorePaths,
+    ignorePaths: [...DEFAULT_IGNORE_PATHS, ...(options.ignorePaths ?? [])],
   });
 
   // Filter out un-relevant sources as these caused hash mismatch between local and remote builds

@@ -49,9 +49,11 @@ export async function buildApp({
       scheme: args.scheme,
       xcodeProject: projectConfig.xcodeProject,
       sourceDir: projectConfig.sourceDir,
+      didInstallPods: false,
     };
   }
 
+  let didInstallPods = false;
   let { xcodeProject, sourceDir } = projectConfig;
 
   if (args.installPods) {
@@ -75,6 +77,7 @@ export async function buildApp({
       xcodeProject = newProjectConfig.xcodeProject;
       sourceDir = newProjectConfig.sourceDir;
     }
+    didInstallPods = true;
   }
 
   const info = await getInfo(xcodeProject, sourceDir);
@@ -123,6 +126,7 @@ export async function buildApp({
     xcodeProject,
     sourceDir,
     bundleIdentifier: buildSettings.bundleIdentifier,
+    didInstallPods,
   };
 }
 

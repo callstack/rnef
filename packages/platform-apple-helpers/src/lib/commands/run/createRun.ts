@@ -52,12 +52,19 @@ export const createRun = async ({
       ? 'simulator'
       : 'device'
     : 'simulator';
-  const artifactName = await formatArtifactName({
-    platform: 'ios',
-    traits: [deviceOrSimulator, args.configuration ?? 'Debug'],
-    root: projectRoot,
-    fingerprintOptions,
-  });
+
+  async function getArtifactName({ silent }: { silent?: boolean } = {}) {
+    return await formatArtifactName({
+      platform: 'ios',
+      traits: [deviceOrSimulator, args.configuration ?? 'Debug'],
+      root: projectRoot,
+      fingerprintOptions,
+      silent,
+    });
+  }
+
+  let artifactName = await getArtifactName();
+
   const binaryPath = await getBinaryPath({
     artifactName,
     binaryPathFlag: args.binaryPath,
@@ -132,7 +139,7 @@ ${devices
     }
     cacheRecentDevice(device, platformName);
     if (device.type === 'simulator') {
-      const [, { appPath, infoPlistPath }] = await Promise.all([
+      const [, { appPath, infoPlistPath, didInstallPods }] = await Promise.all([
         launchSimulator(device),
         buildApp({
           args,
@@ -144,6 +151,11 @@ ${devices
           binaryPath,
         }),
       ]);
+      // After installing pods the fingerprint likely changes.
+      // We update the artifact name to reflect the new fingerprint and store proper entry in the local cache.
+      if (didInstallPods) {
+        artifactName = await getArtifactName({ silent: true });
+      }
       saveLocalBuildCache(artifactName, appPath);
       await runOnSimulator(device, appPath, infoPlistPath);
     } else if (device.type === 'device') {
@@ -194,7 +206,7 @@ ${devices
       }
     }
     for (const bootedDevice of bootedDevices) {
-      const [, { appPath, infoPlistPath, bundleIdentifier }] =
+      const [, { appPath, infoPlistPath, bundleIdentifier, didInstallPods }] =
         await Promise.all([
           launchSimulator(bootedDevice),
           buildApp({
@@ -207,6 +219,11 @@ ${devices
             binaryPath,
           }),
         ]);
+      // After installing pods the fingerprint likely changes.
+      // We update the artifact name to reflect the new fingerprint and store proper entry in the local cache.
+      if (didInstallPods) {
+        artifactName = await getArtifactName({ silent: true });
+      }
       saveLocalBuildCache(artifactName, appPath);
       if (bootedDevice.type === 'simulator') {
         await runOnSimulator(bootedDevice, appPath, infoPlistPath);
